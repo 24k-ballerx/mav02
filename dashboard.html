@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard — Maverick International Portal</title>
+    <meta name="description" content="Maverick International School Portal - Main Dashboard" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="css/style.css" />
+    <style>
+        /* Dashboard chart bars */
+        .chart-container {
+            display: flex;
+            align-items: flex-end;
+            gap: 10px;
+            height: 140px;
+            padding: 0 4px;
+        }
+
+        .chart-bar-group {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            height: 100%;
+        }
+
+        .chart-bars {
+            display: flex;
+            align-items: flex-end;
+            gap: 3px;
+            flex: 1;
+            width: 100%;
+        }
+
+        .chart-bar {
+            flex: 1;
+            border-radius: 4px 4px 0 0;
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            min-width: 6px;
+        }
+
+        .chart-bar:hover {
+            opacity: 0.8;
+            transform: scaleY(1.05);
+            transform-origin: bottom;
+        }
+
+        .chart-bar.primary {
+            background: linear-gradient(180deg, #1e5aad, #2870d4);
+        }
+
+        .chart-bar.gold {
+            background: linear-gradient(180deg, #c9a84c, #e8c96d);
+        }
+
+        .chart-label {
+            font-size: 10.5px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .chart-legend {
+            display: flex;
+            gap: 16px;
+            margin-top: 12px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        /* Donut chart */
+        .donut-wrap {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .donut-svg-wrap {
+            position: relative;
+            width: 100px;
+            flex-shrink: 0;
+        }
+
+        .donut-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .donut-pct {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+
+        .donut-sub {
+            font-size: 9.5px;
+            color: var(--text-muted);
+            white-space: nowrap;
+        }
+
+        .donut-legend {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            flex: 1;
+        }
+
+        .donut-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            font-size: 12.5px;
+        }
+
+        .donut-item-left {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .donut-color {
+            width: 10px;
+            height: 10px;
+            border-radius: 3px;
+            flex-shrink: 0;
+        }
+
+        .donut-item-label {
+            color: var(--text-secondary);
+        }
+
+        .donut-item-val {
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        /* Activity feed */
+        .activity-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 14px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: var(--bg-base);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            flex-shrink: 0;
+        }
+
+        .activity-body {
+            flex: 1;
+        }
+
+        .activity-text {
+            font-size: 13px;
+            color: var(--text-primary);
+            line-height: 1.5;
+        }
+
+        .activity-text strong {
+            color: var(--accent);
+        }
+
+        .activity-time {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        /* Quick Action cards */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+        }
+
+        .qa-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 18px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+        }
+
+        .qa-card:hover {
+            border-color: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .qa-icon {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .qa-label {
+            font-size: 12.5px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        /* Upcoming events */
+        .event-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .event-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px 14px;
+            background: var(--bg-base);
+            border-radius: var(--radius-md);
+            transition: var(--transition);
+        }
+
+        .event-item:hover {
+            background: rgba(201, 168, 76, 0.06);
+        }
+
+        .event-date-box {
+            width: 44px;
+            flex-shrink: 0;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 10px;
+            padding: 6px 4px;
+            text-align: center;
+            color: #fff;
+        }
+
+        .event-month {
+            font-size: 9px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            opacity: 0.8;
+        }
+
+        .event-day {
+            font-size: 18px;
+            font-weight: 800;
+            line-height: 1;
+        }
+
+        .event-info {
+            flex: 1;
+        }
+
+        .event-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .event-detail {
+            font-size: 11.5px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        /* Top students */
+        .top-student-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .top-student-row:last-child {
+            border-bottom: none;
+        }
+
+        .rank-badge {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--bg-base);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .rank-1 {
+            background: linear-gradient(135deg, #f6d860, #e8c96d);
+            color: #7a5500;
+        }
+
+        .rank-2 {
+            background: #e0e4ea;
+            color: #555;
+        }
+
+        .rank-3 {
+            background: linear-gradient(135deg, #c87941, #e0965d);
+            color: #fff;
+        }
+
+        .ts-name {
+            font-size: 13px;
+            font-weight: 600;
+            flex: 1;
+        }
+
+        .ts-class {
+            font-size: 11.5px;
+            color: var(--text-muted);
+        }
+
+        .ts-score {
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--accent);
+        }
+
+        @media (max-width: 768px) {
+            .quick-actions {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="portal-shell">
+        <!-- SIDEBAR -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-brand">
+                <div class="brand-icon">🎓</div>
+                <div class="brand-text">
+                    <span class="brand-name">Maverick International</span>
+                    <span class="brand-tagline">School Portal</span>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <span class="nav-section-label">Main</span>
+                <ul>
+                    <li class="nav-item">
+                        <a href="dashboard.html" class="nav-link active">
+                            <span class="nav-icon">🏠</span> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="students.html" class="nav-link">
+                            <span class="nav-icon">👨‍🎓</span> Students
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="courses.html" class="nav-link">
+                            <span class="nav-icon">📚</span> Courses
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="results.html" class="nav-link">
+                            <span class="nav-icon">📊</span> Results
+                            <span class="nav-badge">New</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="timetable.html" class="nav-link">
+                            <span class="nav-icon">📅</span> Timetable
+                        </a>
+                    </li>
+                </ul>
+
+                <span class="nav-section-label">Communication</span>
+                <ul>
+                    <li class="nav-item">
+                        <a href="notices.html" class="nav-link">
+                            <span class="nav-icon">📢</span> Notices
+                            <span class="nav-badge">3</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <span class="nav-icon">💬</span> Messages
+                        </a>
+                    </li>
+                </ul>
+
+                <span class="nav-section-label">Account</span>
+                <ul>
+                    <li class="nav-item">
+                        <a href="profile.html" class="nav-link">
+                            <span class="nav-icon">👤</span> Profile
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <span class="nav-icon">⚙️</span> Settings
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="sidebar-user">
+                    <div class="user-avatar-sm" data-user-initials>EO</div>
+                    <div class="user-info-sm">
+                        <div class="user-name-sm" data-user-name>Loading...</div>
+                        <div class="user-role-sm" data-user-role>Administrator</div>
+                    </div>
+                    <button class="logout-btn" onclick="Portal.logout()" title="Logout">🚪</button>
+                </div>
+            </div>
+        </aside>
+
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+        <!-- MAIN CONTENT -->
+        <div class="main-content">
+            <!-- HEADER -->
+            <header class="top-header">
+                <div class="header-left">
+                    <button class="menu-toggle" id="menuToggle">☰</button>
+                    <div class="page-title-area">
+                        <h1>Dashboard</h1>
+                        <div class="breadcrumb">
+                            <span>Maverick Portal</span>
+                            <span class="sep">›</span>
+                            <span>Dashboard</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <div class="header-time">
+                        <span class="time" id="liveTime">12:00:00</span>
+                        <span class="date" id="liveDate">Loading...</span>
+                    </div>
+                    <button class="header-action-btn" title="Notifications">
+                        🔔
+                        <span class="notif-dot"></span>
+                    </button>
+                    <button class="header-action-btn" title="Search">🔍</button>
+                    <div class="header-user dropdown" data-dropdown="userMenuDash">
+                        <div class="user-avatar" data-user-initials>EO</div>
+                        <div class="user-details">
+                            <span class="user-name" data-user-name>Dr. Okafor</span>
+                            <span class="user-role" data-user-role>Administrator</span>
+                        </div>
+                        <span>▾</span>
+                    </div>
+                    <div class="dropdown-menu" id="userMenuDash">
+                        <a href="profile.html" class="dropdown-item">👤 My Profile</a>
+                        <a href="#" class="dropdown-item">⚙️ Settings</a>
+                        <div class="dropdown-divider"></div>
+                        <button class="dropdown-item danger" onclick="Portal.logout()">🚪 Logout</button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- PAGE CONTENT -->
+            <main class="page-content">
+
+                <!-- Welcome Banner -->
+                <div class="card animate-fadeInUp"
+                    style="margin-bottom: 24px; background: linear-gradient(135deg, #0a1628 0%, #1e5aad 100%); border: none;">
+                    <div class="card-body"
+                        style="padding: 28px 32px; display:flex; align-items:center; justify-content:space-between; gap:20px;">
+                        <div>
+                            <p
+                                style="font-size:12px; color:rgba(255,255,255,0.5); text-transform:uppercase; letter-spacing:1px; margin-bottom:6px;">
+                                Welcome back 👋</p>
+                            <h2 style="font-family:'Playfair Display',serif; font-size:26px; color:#fff; font-weight:700; margin-bottom:8px;"
+                                data-user-name>Dr. Emmanuel Okafor</h2>
+                            <p style="font-size:14px; color:rgba(255,255,255,0.6);">Here's what's happening at Maverick
+                                International today.</p>
+                        </div>
+                        <div
+                            style="text-align:center; background:rgba(255,255,255,0.07); border-radius:16px; padding:20px 28px; border:1px solid rgba(255,255,255,0.1);">
+                            <div style="font-size:32px; font-weight:800; color:#c9a84c;">2026</div>
+                            <div style="font-size:12px; color:rgba(255,255,255,0.5); margin-top:2px;">Academic Year
+                            </div>
+                            <div style="font-size:11px; color:#c9a84c; font-weight:600; margin-top:4px;">3rd Term</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stats Grid -->
+                <div class="stats-grid">
+                    <div class="stat-card animate-fadeInUp animate-delay-1"
+                        style="--stat-color: #1e5aad; --stat-bg: rgba(30,90,173,0.08);">
+                        <div class="stat-icon"><span class="stat-emoji">👨‍🎓</span></div>
+                        <div class="stat-info">
+                            <div class="stat-value" data-count="2456">2456</div>
+                            <div class="stat-label">Total Students</div>
+                            <div class="stat-change up">↑ 12.4% vs last term</div>
+                        </div>
+                    </div>
+                    <div class="stat-card animate-fadeInUp animate-delay-2"
+                        style="--stat-color: #c9a84c; --stat-bg: rgba(201,168,76,0.08);">
+                        <div class="stat-icon"><span class="stat-emoji">👩‍🏫</span></div>
+                        <div class="stat-info">
+                            <div class="stat-value" data-count="142">142</div>
+                            <div class="stat-label">Teaching Staff</div>
+                            <div class="stat-change up">↑ 3 new hires</div>
+                        </div>
+                    </div>
+                    <div class="stat-card animate-fadeInUp animate-delay-3"
+                        style="--stat-color: #27ae60; --stat-bg: rgba(39,174,96,0.08);">
+                        <div class="stat-icon"><span class="stat-emoji">📚</span></div>
+                        <div class="stat-info">
+                            <div class="stat-value" data-count="48">48</div>
+                            <div class="stat-label">Active Courses</div>
+                            <div class="stat-change up">↑ 5 new courses</div>
+                        </div>
+                    </div>
+                    <div class="stat-card animate-fadeInUp animate-delay-4"
+                        style="--stat-color: #8e44ad; --stat-bg: rgba(142,68,173,0.08);">
+                        <div class="stat-icon"><span class="stat-emoji">🏆</span></div>
+                        <div class="stat-info">
+                            <div class="stat-value">98%</div>
+                            <div class="stat-label">Pass Rate</div>
+                            <div class="stat-change up">↑ 2.1% vs last term</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="animate-fadeInUp animate-delay-2" style="margin-bottom: 24px;">
+                    <h3 style="font-size:15px; font-weight:700; color:var(--text-primary); margin-bottom:14px;">Quick
+                        Actions</h3>
+                    <div class="quick-actions">
+                        <a href="students.html" class="qa-card">
+                            <div class="qa-icon">➕</div>
+                            <div class="qa-label">Add Student</div>
+                        </a>
+                        <a href="results.html" class="qa-card">
+                            <div class="qa-icon">📝</div>
+                            <div class="qa-label">Enter Results</div>
+                        </a>
+                        <a href="notices.html" class="qa-card">
+                            <div class="qa-icon">📢</div>
+                            <div class="qa-label">Post Notice</div>
+                        </a>
+                        <a href="timetable.html" class="qa-card">
+                            <div class="qa-icon">📅</div>
+                            <div class="qa-label">View Timetable</div>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Charts Row -->
+                <div class="grid-2 animate-fadeInUp animate-delay-3" style="margin-bottom: 24px;">
+                    <!-- Attendance Chart -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div>
+                                <div class="card-title">Weekly Attendance</div>
+                                <div class="card-subtitle">Students vs Teachers — This Week</div>
+                            </div>
+                            <select class="form-control" style="width:auto; padding:6px 10px; font-size:12px;">
+                                <option>This Week</option>
+                                <option>Last Week</option>
+                                <option>This Month</option>
+                            </select>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container" id="attendanceChart">
+                                <!-- JS renders bars -->
+                            </div>
+                            <div class="chart-legend">
+                                <div class="legend-item">
+                                    <div class="legend-dot" style="background:#1e5aad"></div> Students
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-dot" style="background:#c9a84c"></div> Teachers
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Enrollment Donut -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div>
+                                <div class="card-title">Enrollment by Class</div>
+                                <div class="card-subtitle">Current Term Distribution</div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="donut-wrap">
+                                <div class="donut-svg-wrap">
+                                    <svg viewBox="0 0 100 100" width="100" height="100">
+                                        <circle cx="50" cy="50" r="40" fill="none" stroke="#f0f2f7" stroke-width="14" />
+                                        <circle cx="50" cy="50" r="40" fill="none" stroke="#1e5aad" stroke-width="14"
+                                            stroke-dasharray="80 170" stroke-dashoffset="25" stroke-linecap="round" />
+                                        <circle cx="50" cy="50" r="40" fill="none" stroke="#c9a84c" stroke-width="14"
+                                            stroke-dasharray="55 195" stroke-dashoffset="-55" stroke-linecap="round" />
+                                        <circle cx="50" cy="50" r="40" fill="none" stroke="#27ae60" stroke-width="14"
+                                            stroke-dasharray="35 215" stroke-dashoffset="-110" stroke-linecap="round" />
+                                        <circle cx="50" cy="50" r="40" fill="none" stroke="#8e44ad" stroke-width="14"
+                                            stroke-dasharray="81 169" stroke-dashoffset="-145" stroke-linecap="round" />
+                                    </svg>
+                                    <div class="donut-center">
+                                        <div class="donut-pct">2.4k</div>
+                                        <div class="donut-sub">Total</div>
+                                    </div>
+                                </div>
+                                <div class="donut-legend">
+                                    <div class="donut-item">
+                                        <div class="donut-item-left">
+                                            <div class="donut-color" style="background:#1e5aad"></div>
+                                            <span class="donut-item-label">JSS 1-3</span>
+                                        </div>
+                                        <span class="donut-item-val">820</span>
+                                    </div>
+                                    <div class="donut-item">
+                                        <div class="donut-item-left">
+                                            <div class="donut-color" style="background:#c9a84c"></div>
+                                            <span class="donut-item-label">SS 1</span>
+                                        </div>
+                                        <span class="donut-item-val">560</span>
+                                    </div>
+                                    <div class="donut-item">
+                                        <div class="donut-item-left">
+                                            <div class="donut-color" style="background:#27ae60"></div>
+                                            <span class="donut-item-label">SS 2</span>
+                                        </div>
+                                        <span class="donut-item-val">510</span>
+                                    </div>
+                                    <div class="donut-item">
+                                        <div class="donut-item-left">
+                                            <div class="donut-color" style="background:#8e44ad"></div>
+                                            <span class="donut-item-label">SS 3</span>
+                                        </div>
+                                        <span class="donut-item-val">566</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bottom Row -->
+                <div class="grid-3 animate-fadeInUp animate-delay-4">
+                    <!-- Activity Feed -->
+                    <div class="card" style="grid-column: span 2;">
+                        <div class="card-header">
+                            <div>
+                                <div class="card-title">Recent Activity</div>
+                                <div class="card-subtitle">Latest system events</div>
+                            </div>
+                            <button class="btn btn-outline btn-sm">View All</button>
+                        </div>
+                        <div class="card-body">
+                            <div class="activity-list">
+                                <div class="activity-item">
+                                    <div class="activity-icon">📝</div>
+                                    <div class="activity-body">
+                                        <div class="activity-text"><strong>Mrs. Adeleke</strong> uploaded SS3 Chemistry
+                                            results for Term 3</div>
+                                        <div class="activity-time">2 minutes ago</div>
+                                    </div>
+                                </div>
+                                <div class="activity-item">
+                                    <div class="activity-icon">👤</div>
+                                    <div class="activity-body">
+                                        <div class="activity-text"><strong>New student</strong> Amina Suleiman enrolled
+                                            in JSS 1A</div>
+                                        <div class="activity-time">15 minutes ago</div>
+                                    </div>
+                                </div>
+                                <div class="activity-item">
+                                    <div class="activity-icon">📢</div>
+                                    <div class="activity-body">
+                                        <div class="activity-text"><strong>Admin</strong> posted a notice: "Third Term
+                                            Examination Schedule"</div>
+                                        <div class="activity-time">1 hour ago</div>
+                                    </div>
+                                </div>
+                                <div class="activity-item">
+                                    <div class="activity-icon">💳</div>
+                                    <div class="activity-body">
+                                        <div class="activity-text"><strong>42 students</strong> cleared their school
+                                            fees payments</div>
+                                        <div class="activity-time">2 hours ago</div>
+                                    </div>
+                                </div>
+                                <div class="activity-item">
+                                    <div class="activity-icon">🏆</div>
+                                    <div class="activity-body">
+                                        <div class="activity-text"><strong>Chukwuemeka Obi</strong> achieved highest
+                                            score in Mathematics (98/100)</div>
+                                        <div class="activity-time">Yesterday, 3:40 PM</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Upcoming Events -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div>
+                                <div class="card-title">Upcoming Events</div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="event-list">
+                                <div class="event-item">
+                                    <div class="event-date-box">
+                                        <div class="event-month">FEB</div>
+                                        <div class="event-day">25</div>
+                                    </div>
+                                    <div class="event-info">
+                                        <div class="event-name">Term 3 Exams Begin</div>
+                                        <div class="event-detail">All classes · 8:00 AM</div>
+                                    </div>
+                                </div>
+                                <div class="event-item">
+                                    <div class="event-date-box">
+                                        <div class="event-month">MAR</div>
+                                        <div class="event-day">08</div>
+                                    </div>
+                                    <div class="event-info">
+                                        <div class="event-name">PTA Meeting</div>
+                                        <div class="event-detail">School Hall · 10:00 AM</div>
+                                    </div>
+                                </div>
+                                <div class="event-item">
+                                    <div class="event-date-box"
+                                        style="background:linear-gradient(135deg, #c9a84c, #e8c96d);">
+                                        <div class="event-month">MAR</div>
+                                        <div class="event-day">15</div>
+                                    </div>
+                                    <div class="event-info">
+                                        <div class="event-name">Speech & Prize Day</div>
+                                        <div class="event-detail">All · 9:00 AM</div>
+                                    </div>
+                                </div>
+                                <div class="event-item">
+                                    <div class="event-date-box">
+                                        <div class="event-month">MAR</div>
+                                        <div class="event-day">28</div>
+                                    </div>
+                                    <div class="event-info">
+                                        <div class="event-name">Term 3 Ends</div>
+                                        <div class="event-detail">Mid-day dismissal</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </main>
+
+            <footer class="page-footer">
+                <span>© 2025 <strong>Maverick International School</strong>. All rights reserved.</span>
+                <span>Academic Year: <strong>2025/2026</strong> · Term 3</span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script>
+        // Render attendance bars
+        (function () {
+            const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
+            const students = [92, 88, 95, 84, 91];
+            const teachers = [98, 96, 100, 94, 97];
+            const container = document.getElementById('attendanceChart');
+            if (!container) return;
+
+            days.forEach((day, i) => {
+                const group = document.createElement('div');
+                group.className = 'chart-bar-group';
+                group.innerHTML = `
+        <div class="chart-bars">
+          <div class="chart-bar primary" style="height:${students[i]}%; min-height:4px;" title="Students: ${students[i]}%"></div>
+          <div class="chart-bar gold" style="height:${teachers[i]}%; min-height:4px;" title="Teachers: ${teachers[i]}%"></div>
+        </div>
+        <div class="chart-label">${day}</div>
+      `;
+                container.appendChild(group);
+            });
+        })();
+    </script>
+</body>
+
+</html>

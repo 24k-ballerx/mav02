@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Students — Maverick International Portal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="css/style.css" />
+    <style>
+        .student-photo {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            object-fit: cover;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            color: #fff;
+            flex-shrink: 0;
+        }
+
+        .student-cell {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .student-cell-info .s-name {
+            font-size: 13.5px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .student-cell-info .s-id {
+            font-size: 11.5px;
+            color: var(--text-muted);
+        }
+
+        .action-group {
+            display: flex;
+            gap: 6px;
+        }
+
+        /* Filter pills */
+        .filter-pills {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .filter-pill {
+            padding: 6px 14px;
+            border-radius: var(--radius-full);
+            font-size: 12.5px;
+            font-weight: 600;
+            border: 1.5px solid var(--border);
+            background: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .filter-pill:hover,
+        .filter-pill.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: #fff;
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .page-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: var(--radius-sm);
+            border: 1.5px solid var(--border);
+            background: transparent;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .page-btn:hover,
+        .page-btn.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: #fff;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="portal-shell">
+        <!-- SIDEBAR -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-brand">
+                <div class="brand-icon">🎓</div>
+                <div class="brand-text">
+                    <span class="brand-name">Maverick International</span>
+                    <span class="brand-tagline">School Portal</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <span class="nav-section-label">Main</span>
+                <ul>
+                    <li class="nav-item"><a href="dashboard.html" class="nav-link"><span class="nav-icon">🏠</span>
+                            Dashboard</a></li>
+                    <li class="nav-item"><a href="students.html" class="nav-link active"><span
+                                class="nav-icon">👨‍🎓</span> Students</a></li>
+                    <li class="nav-item"><a href="courses.html" class="nav-link"><span class="nav-icon">📚</span>
+                            Courses</a></li>
+                    <li class="nav-item"><a href="results.html" class="nav-link"><span class="nav-icon">📊</span>
+                            Results <span class="nav-badge">New</span></a></li>
+                    <li class="nav-item"><a href="timetable.html" class="nav-link"><span class="nav-icon">📅</span>
+                            Timetable</a></li>
+                </ul>
+                <span class="nav-section-label">Communication</span>
+                <ul>
+                    <li class="nav-item"><a href="notices.html" class="nav-link"><span class="nav-icon">📢</span>
+                            Notices <span class="nav-badge">3</span></a></li>
+                    <li class="nav-item"><a href="#" class="nav-link"><span class="nav-icon">💬</span> Messages</a></li>
+                </ul>
+                <span class="nav-section-label">Account</span>
+                <ul>
+                    <li class="nav-item"><a href="profile.html" class="nav-link"><span class="nav-icon">👤</span>
+                            Profile</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link"><span class="nav-icon">⚙️</span> Settings</a></li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="sidebar-user">
+                    <div class="user-avatar-sm" data-user-initials>EO</div>
+                    <div class="user-info-sm">
+                        <div class="user-name-sm" data-user-name>Admin</div>
+                        <div class="user-role-sm" data-user-role>Administrator</div>
+                    </div>
+                    <button class="logout-btn" onclick="Portal.logout()">🚪</button>
+                </div>
+            </div>
+        </aside>
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+        <!-- MAIN CONTENT -->
+        <div class="main-content">
+            <header class="top-header">
+                <div class="header-left">
+                    <button class="menu-toggle" id="menuToggle">☰</button>
+                    <div class="page-title-area">
+                        <h1>Students</h1>
+                        <div class="breadcrumb">
+                            <span>Portal</span><span class="sep">›</span><span>Students</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <div class="header-time"><span class="time" id="liveTime">--:--</span><span class="date"
+                            id="liveDate"></span></div>
+                    <button class="header-action-btn">🔔<span class="notif-dot"></span></button>
+                    <div class="header-user" data-dropdown="userMenuStu">
+                        <div class="user-avatar" data-user-initials>EO</div>
+                        <div class="user-details"><span class="user-name" data-user-name>Admin</span><span
+                                class="user-role" data-user-role>Administrator</span></div>
+                        <span>▾</span>
+                    </div>
+                    <div class="dropdown-menu" id="userMenuStu">
+                        <a href="profile.html" class="dropdown-item">👤 My Profile</a>
+                        <div class="dropdown-divider"></div>
+                        <button class="dropdown-item danger" onclick="Portal.logout()">🚪 Logout</button>
+                    </div>
+                </div>
+            </header>
+
+            <main class="page-content">
+                <!-- Stats mini -->
+                <div class="stats-grid animate-fadeInUp"
+                    style="grid-template-columns: repeat(4, 1fr); margin-bottom: 24px;">
+                    <div class="stat-card" style="--stat-color:#1e5aad; --stat-bg:rgba(30,90,173,0.08);">
+                        <div class="stat-icon"><span class="stat-emoji">👥</span></div>
+                        <div class="stat-info">
+                            <div class="stat-value" data-count="2456">2456</div>
+                            <div class="stat-label">Total Students</div>
+                        </div>
+                    </div>
+                    <div class="stat-card" style="--stat-color:#27ae60; --stat-bg:rgba(39,174,96,0.08);">
+                        <div class="stat-icon"><span class="stat-emoji">✅</span></div>
+                        <div class="stat-info">
+                            <div class="stat-value" data-count="2301">2301</div>
+                            <div class="stat-label">Active</div>
+                        </div>
+                    </div>
+                    <div class="stat-card" style="--stat-color:#f39c12; --stat-bg:rgba(243,156,18,0.08);">
+                        <div class="stat-icon"><span class="stat-emoji">📝</span></div>
+                        <div class="stat-info">
+                            <div class="stat-value" data-count="48">48</div>
+                            <div class="stat-label">New This Term</div>
+                        </div>
+                    </div>
+                    <div class="stat-card" style="--stat-color:#e74c3c; --stat-bg:rgba(231,76,60,0.08);">
+                        <div class="stat-icon"><span class="stat-emoji">🚨</span></div>
+                        <div class="stat-info">
+                            <div class="stat-value" data-count="12">12</div>
+                            <div class="stat-label">Suspended</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Student Table Card -->
+                <div class="card animate-fadeInUp animate-delay-2">
+                    <div class="table-toolbar">
+                        <div class="search-bar">
+                            <span class="search-icon">🔍</span>
+                            <input type="text" id="studentSearch" placeholder="Search by name, ID, class..." />
+                        </div>
+                        <div class="toolbar-actions">
+                            <div class="filter-pills">
+                                <button class="filter-pill active">All</button>
+                                <button class="filter-pill">JSS</button>
+                                <button class="filter-pill">SS 1</button>
+                                <button class="filter-pill">SS 2</button>
+                                <button class="filter-pill">SS 3</button>
+                            </div>
+                            <button class="btn btn-gold btn-sm" data-modal-open="addStudentModal">+ Add Student</button>
+                            <button class="btn btn-outline btn-sm">⬇ Export</button>
+                        </div>
+                    </div>
+
+                    <div class="table-wrap">
+                        <table id="studentsTable">
+                            <thead>
+                                <tr>
+                                    <th>Student</th>
+                                    <th>Student ID</th>
+                                    <th>Class</th>
+                                    <th>Gender</th>
+                                    <th>Date Enrolled</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="student-cell">
+                                            <div class="avatar avatar-initials-1 student-photo">CO</div>
+                                            <div class="student-cell-info">
+                                                <div class="s-name">Chukwuemeka Obi</div>
+                                                <div class="s-id">chukwu@maverick.edu.ng</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><code>STD001</code></td>
+                                    <td><span class="badge badge-primary">SS 3A</span></td>
+                                    <td>Male</td>
+                                    <td>Sept 2023</td>
+                                    <td><span class="badge badge-success">Active</span></td>
+                                    <td>
+                                        <div class="action-group"><button
+                                                class="btn btn-outline btn-icon btn-sm">👁️</button><button
+                                                class="btn btn-outline btn-icon btn-sm">✏️</button><button
+                                                class="btn btn-danger btn-icon btn-sm">🗑️</button></div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="student-cell">
+                                            <div class="avatar avatar-initials-3 student-photo">AI</div>
+                                            <div class="student-cell-info">
+                                                <div class="s-name">Amina Ibrahim</div>
+                                                <div class="s-id">amina@maverick.edu.ng</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><code>STD002</code></td>
+                                    <td><span class="badge badge-info">SS 3B</span></td>
+                                    <td>Female</td>
+                                    <td>Sept 2023</td>
+                                    <td><span class="badge badge-success">Active</span></td>
+                                    <td>
+                                        <div class="action-group"><button
+                                                class="btn btn-outline btn-icon btn-sm">👁️</button><button
+                                                class="btn btn-outline btn-icon btn-sm">✏️</button><button
+                                                class="btn btn-danger btn-icon btn-sm">🗑️</button></div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="student-cell">
+                                            <div class="avatar avatar-initials-4 student-photo">FO</div>
+                                            <div class="student-cell-info">
+                                                <div class="s-name">Fatima Okonkwo</div>
+                                                <div class="s-id">fatima@maverick.edu.ng</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><code>STD003</code></td>
+                                    <td><span class="badge badge-primary">SS 2A</span></td>
+                                    <td>Female</td>
+                                    <td>Jan 2024</td>
+                                    <td><span class="badge badge-success">Active</span></td>
+                                    <td>
+                                        <div class="action-group"><button
+                                                class="btn btn-outline btn-icon btn-sm">👁️</button><button
+                                                class="btn btn-outline btn-icon btn-sm">✏️</button><button
+                                                class="btn btn-danger btn-icon btn-sm">🗑️</button></div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="student-cell">
+                                            <div class="avatar avatar-initials-5 student-photo">TA</div>
+                                            <div class="student-cell-info">
+                                                <div class="s-name">Tunde Adesanya</div>
+                                                <div class="s-id">tunde@maverick.edu.ng</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><code>STD004</code></td>
+                                    <td><span class="badge badge-gold">JSS 3A</span></td>
+                                    <td>Male</td>
+                                    <td>Sept 2024</td>
+                                    <td><span class="badge badge-warning">On Leave</span></td>
+                                    <td>
+                                        <div class="action-group"><button
+                                                class="btn btn-outline btn-icon btn-sm">👁️</button><button
+                                                class="btn btn-outline btn-icon btn-sm">✏️</button><button
+                                                class="btn btn-danger btn-icon btn-sm">🗑️</button></div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="student-cell">
+                                            <div class="avatar avatar-initials-6 student-photo">KO</div>
+                                            <div class="student-cell-info">
+                                                <div class="s-name">Kelechi Onyeka</div>
+                                                <div class="s-id">kelechi@maverick.edu.ng</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><code>STD005</code></td>
+                                    <td><span class="badge badge-primary">SS 1C</span></td>
+                                    <td>Male</td>
+                                    <td>Sept 2024</td>
+                                    <td><span class="badge badge-success">Active</span></td>
+                                    <td>
+                                        <div class="action-group"><button
+                                                class="btn btn-outline btn-icon btn-sm">👁️</button><button
+                                                class="btn btn-outline btn-icon btn-sm">✏️</button><button
+                                                class="btn btn-danger btn-icon btn-sm">🗑️</button></div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="student-cell">
+                                            <div class="avatar avatar-initials-2 student-photo">ZM</div>
+                                            <div class="student-cell-info">
+                                                <div class="s-name">Zara Mohammed</div>
+                                                <div class="s-id">zara@maverick.edu.ng</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><code>STD006</code></td>
+                                    <td><span class="badge badge-info">JSS 1A</span></td>
+                                    <td>Female</td>
+                                    <td>Jan 2025</td>
+                                    <td><span class="badge badge-success">Active</span></td>
+                                    <td>
+                                        <div class="action-group"><button
+                                                class="btn btn-outline btn-icon btn-sm">👁️</button><button
+                                                class="btn btn-outline btn-icon btn-sm">✏️</button><button
+                                                class="btn btn-danger btn-icon btn-sm">🗑️</button></div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="student-cell">
+                                            <div class="avatar avatar-initials-1 student-photo">BP</div>
+                                            <div class="student-cell-info">
+                                                <div class="s-name">Blessing Pius</div>
+                                                <div class="s-id">blessing@maverick.edu.ng</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><code>STD007</code></td>
+                                    <td><span class="badge badge-primary">SS 2B</span></td>
+                                    <td>Female</td>
+                                    <td>Sept 2023</td>
+                                    <td><span class="badge badge-danger">Suspended</span></td>
+                                    <td>
+                                        <div class="action-group"><button
+                                                class="btn btn-outline btn-icon btn-sm">👁️</button><button
+                                                class="btn btn-outline btn-icon btn-sm">✏️</button><button
+                                                class="btn btn-danger btn-icon btn-sm">🗑️</button></div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="student-cell">
+                                            <div class="avatar avatar-initials-3 student-photo">AE</div>
+                                            <div class="student-cell-info">
+                                                <div class="s-name">Abiodun Eze</div>
+                                                <div class="s-id">abiodun@maverick.edu.ng</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><code>STD008</code></td>
+                                    <td><span class="badge badge-primary">SS 3A</span></td>
+                                    <td>Male</td>
+                                    <td>Sept 2022</td>
+                                    <td><span class="badge badge-success">Active</span></td>
+                                    <td>
+                                        <div class="action-group"><button
+                                                class="btn btn-outline btn-icon btn-sm">👁️</button><button
+                                                class="btn btn-outline btn-icon btn-sm">✏️</button><button
+                                                class="btn btn-danger btn-icon btn-sm">🗑️</button></div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination -->
+                    <div
+                        style="padding: 16px 24px; display:flex; align-items:center; justify-content:space-between; border-top: 1px solid var(--border);">
+                        <span style="font-size:13px; color: var(--text-muted);">Showing 1–8 of 2,456 students</span>
+                        <div class="pagination">
+                            <button class="page-btn">‹</button>
+                            <button class="page-btn active">1</button>
+                            <button class="page-btn">2</button>
+                            <button class="page-btn">3</button>
+                            <span style="color:var(--text-muted); font-size:13px; padding: 0 4px;">...</span>
+                            <button class="page-btn">308</button>
+                            <button class="page-btn">›</button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <footer class="page-footer">
+                <span>© 2025 <strong>Maverick International School</strong></span>
+                <span>Academic Year: <strong>2025/2026</strong> · Term 3</span>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Add Student Modal -->
+    <div class="modal-overlay" id="addStudentModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">➕ Add New Student</h3>
+                <button class="modal-close" data-modal-close="addStudentModal">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="grid-2" style="gap:14px;">
+                    <div class="form-group" style="margin:0;">
+                        <label class="form-label">First Name</label>
+                        <input type="text" class="form-control" placeholder="First name" />
+                    </div>
+                    <div class="form-group" style="margin:0;">
+                        <label class="form-label">Last Name</label>
+                        <input type="text" class="form-control" placeholder="Last name" />
+                    </div>
+                </div>
+                <div class="form-group" style="margin-top:14px;">
+                    <label class="form-label">Email Address</label>
+                    <input type="email" class="form-control" placeholder="student@maverick.edu.ng" />
+                </div>
+                <div class="grid-2" style="gap:14px;">
+                    <div class="form-group" style="margin:0;">
+                        <label class="form-label">Class</label>
+                        <select class="form-control">
+                            <option>JSS 1A</option>
+                            <option>JSS 1B</option>
+                            <option>JSS 2A</option>
+                            <option>JSS 3A</option>
+                            <option>SS 1A</option>
+                            <option>SS 2A</option>
+                            <option>SS 3A</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin:0;">
+                        <label class="form-label">Gender</label>
+                        <select class="form-control">
+                            <option>Male</option>
+                            <option>Female</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group" style="margin-top:14px;">
+                    <label class="form-label">Parent / Guardian Phone</label>
+                    <input type="tel" class="form-control" placeholder="+234 800 000 0000" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" data-modal-close="addStudentModal">Cancel</button>
+                <button class="btn btn-primary"
+                    onclick="Portal.showToast('Student added successfully!', 'success'); Modal.close('addStudentModal')">Save
+                    Student</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            TableHelper.initSearch('studentSearch', 'studentsTable');
+            document.querySelectorAll('.filter-pill').forEach(pill => {
+                pill.addEventListener('click', () => {
+                    document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+                    pill.classList.add('active');
+                });
+            });
+            document.querySelectorAll('.page-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.page-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

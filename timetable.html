@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Timetable — Maverick International Portal</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="css/style.css" />
+    <style>
+        .tt-wrap {
+            overflow-x: auto;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .tt-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+        }
+
+        .tt-table th {
+            background: var(--primary);
+            color: #fff;
+            padding: 14px 16px;
+            font-size: 13px;
+            font-weight: 600;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .tt-table th:first-child {
+            background: #071020;
+            width: 80px;
+            text-align: left;
+            padding-left: 20px;
+        }
+
+        .tt-table td {
+            padding: 0;
+            border: 1px solid rgba(226, 232, 244, 0.6);
+            vertical-align: top;
+            height: 72px;
+        }
+
+        .tt-table td:first-child {
+            background: #f8f9fc;
+            text-align: left;
+            padding: 0 0 0 16px;
+            border-left: none;
+        }
+
+        .tt-time {
+            font-size: 11.5px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            line-height: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 100%;
+        }
+
+        .tt-time span {
+            font-size: 10px;
+            color: var(--text-muted);
+            font-weight: 400;
+            margin-top: 2px;
+        }
+
+        .tt-cell {
+            padding: 8px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .tt-lesson {
+            border-radius: 8px;
+            padding: 8px 10px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .tt-lesson:hover {
+            transform: scale(1.02);
+            filter: brightness(1.05);
+        }
+
+        .tt-lesson-name {
+            font-size: 12.5px;
+            font-weight: 700;
+        }
+
+        .tt-lesson-teacher {
+            font-size: 10.5px;
+            opacity: 0.8;
+            margin-top: 2px;
+        }
+
+        .tt-lesson-room {
+            font-size: 10px;
+            opacity: 0.6;
+            margin-top: 1px;
+        }
+
+        .tt-break {
+            background: #f8f9fc;
+            text-align: center;
+            height: 48px;
+        }
+
+        .tt-break td {
+            height: 48px;
+            padding: 0;
+            border-left: none;
+        }
+
+        .tt-break-content {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            gap: 8px;
+        }
+
+        /* Subject color palettes */
+        .s-math {
+            background: rgba(30, 90, 173, 0.1);
+            color: #1e5aad;
+            border-left: 3px solid #1e5aad;
+        }
+
+        .s-eng {
+            background: rgba(142, 68, 173, 0.1);
+            color: #8e44ad;
+            border-left: 3px solid #8e44ad;
+        }
+
+        .s-bio {
+            background: rgba(231, 76, 60, 0.1);
+            color: #c0392b;
+            border-left: 3px solid #e74c3c;
+        }
+
+        .s-chem {
+            background: rgba(142, 68, 173, 0.08);
+            color: #6c3483;
+            border-left: 3px solid #6c3483;
+        }
+
+        .s-phy {
+            background: rgba(44, 62, 80, 0.1);
+            color: #2c3e50;
+            border-left: 3px solid #2c3e50;
+        }
+
+        .s-fmath {
+            background: rgba(22, 160, 133, 0.1);
+            color: #16a085;
+            border-left: 3px solid #16a085;
+        }
+
+        .s-civic {
+            background: rgba(26, 82, 118, 0.1);
+            color: #1a5276;
+            border-left: 3px solid #1a5276;
+        }
+
+        .s-crs {
+            background: rgba(125, 102, 8, 0.1);
+            color: #7d6608;
+            border-left: 3px solid #b8860b;
+        }
+
+        .s-lit {
+            background: rgba(211, 84, 0, 0.1);
+            color: #d35400;
+            border-left: 3px solid #d35400;
+        }
+
+        .s-pe {
+            background: rgba(39, 174, 96, 0.1);
+            color: #27ae60;
+            border-left: 3px solid #27ae60;
+        }
+
+        .today-col {
+            background: rgba(201, 168, 76, 0.04);
+        }
+
+        .today-header {
+            background: #c9a84c !important;
+            color: #4a3000 !important;
+        }
+
+        /* Class Selector */
+        .class-selector {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .class-btn {
+            padding: 7px 16px;
+            border-radius: var(--radius-full);
+            font-size: 12.5px;
+            font-weight: 600;
+            border: 1.5px solid var(--border);
+            background: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .class-btn:hover,
+        .class-btn.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: #fff;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="portal-shell">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-brand">
+                <div class="brand-icon">🎓</div>
+                <div class="brand-text"><span class="brand-name">Maverick International</span><span
+                        class="brand-tagline">School Portal</span></div>
+            </div>
+            <nav class="sidebar-nav">
+                <span class="nav-section-label">Main</span>
+                <ul>
+                    <li class="nav-item"><a href="dashboard.html" class="nav-link"><span class="nav-icon">🏠</span>
+                            Dashboard</a></li>
+                    <li class="nav-item"><a href="students.html" class="nav-link"><span class="nav-icon">👨‍🎓</span>
+                            Students</a></li>
+                    <li class="nav-item"><a href="courses.html" class="nav-link"><span class="nav-icon">📚</span>
+                            Courses</a></li>
+                    <li class="nav-item"><a href="results.html" class="nav-link"><span class="nav-icon">📊</span>
+                            Results <span class="nav-badge">New</span></a></li>
+                    <li class="nav-item"><a href="timetable.html" class="nav-link active"><span
+                                class="nav-icon">📅</span> Timetable</a></li>
+                </ul>
+                <span class="nav-section-label">Communication</span>
+                <ul>
+                    <li class="nav-item"><a href="notices.html" class="nav-link"><span class="nav-icon">📢</span>
+                            Notices <span class="nav-badge">3</span></a></li>
+                    <li class="nav-item"><a href="#" class="nav-link"><span class="nav-icon">💬</span> Messages</a></li>
+                </ul>
+                <span class="nav-section-label">Account</span>
+                <ul>
+                    <li class="nav-item"><a href="profile.html" class="nav-link"><span class="nav-icon">👤</span>
+                            Profile</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link"><span class="nav-icon">⚙️</span> Settings</a></li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="sidebar-user">
+                    <div class="user-avatar-sm" data-user-initials>EO</div>
+                    <div class="user-info-sm">
+                        <div class="user-name-sm" data-user-name>Admin</div>
+                        <div class="user-role-sm" data-user-role>Administrator</div>
+                    </div><button class="logout-btn" onclick="Portal.logout()">🚪</button>
+                </div>
+            </div>
+        </aside>
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+        <div class="main-content">
+            <header class="top-header">
+                <div class="header-left">
+                    <button class="menu-toggle" id="menuToggle">☰</button>
+                    <div class="page-title-area">
+                        <h1>Timetable</h1>
+                        <div class="breadcrumb"><span>Portal</span><span class="sep">›</span><span>Timetable</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <div class="header-time"><span class="time" id="liveTime">--:--</span><span class="date"
+                            id="liveDate"></span></div>
+                    <button class="header-action-btn">🔔<span class="notif-dot"></span></button>
+                    <div class="header-user" data-dropdown="userMenuTt">
+                        <div class="user-avatar" data-user-initials>EO</div>
+                        <div class="user-details"><span class="user-name" data-user-name>Admin</span><span
+                                class="user-role">Admin</span></div><span>▾</span>
+                    </div>
+                    <div class="dropdown-menu" id="userMenuTt"><a href="profile.html" class="dropdown-item">👤
+                            Profile</a>
+                        <div class="dropdown-divider"></div><button class="dropdown-item danger"
+                            onclick="Portal.logout()">🚪 Logout</button>
+                    </div>
+                </div>
+            </header>
+
+            <main class="page-content">
+                <!-- Controls -->
+                <div
+                    style="display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:20px; flex-wrap:wrap;">
+                    <div>
+                        <h2 style="font-size:18px; font-weight:700;">Class Timetable</h2>
+                        <p style="font-size:13px; color:var(--text-muted);">2025/2026 Academic Session · Third Term</p>
+                    </div>
+                    <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+                        <div class="class-selector">
+                            <button class="class-btn active">SS 3A</button>
+                            <button class="class-btn">SS 3B</button>
+                            <button class="class-btn">SS 2A</button>
+                            <button class="class-btn">SS 1A</button>
+                            <button class="class-btn">JSS 3A</button>
+                        </div>
+                        <button class="btn btn-outline btn-sm">🖨️ Print</button>
+                    </div>
+                </div>
+
+                <!-- Timetable -->
+                <div class="tt-wrap animate-fadeInUp">
+                    <table class="tt-table">
+                        <thead>
+                            <tr>
+                                <th>Period</th>
+                                <th>Monday</th>
+                                <th>Tuesday</th>
+                                <th class="today-header">Wednesday ★</th>
+                                <th>Thursday</th>
+                                <th>Friday</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Period 1 -->
+                            <tr>
+                                <td>
+                                    <div class="tt-time">8:00 – 8:40<span>Period 1</span></div>
+                                </td>
+                                <td>
+                                    <div class="tt-cell">
+                                        <div class="tt-lesson s-math">
+                                            <div class="tt-lesson-name">Mathematics</div>
+                                            <div class="tt-lesson-teacher">Mr. Moses</div>
+                                            <div class="tt-lesson-room">Room 12</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="tt-cell">
+                                        <div class="tt-lesson s-eng">
+                                            <div class="tt-lesson-name">English Lang.</div>
+                                            <div class="tt-lesson-teacher">Mrs. Adeleke</div>
+                                            <div class="tt-lesson-room">Room 1</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="today-col">
+                                    <div class="tt-cell">
+                                        <div class="tt-lesson s-bio">
+                                            <div class="tt-lesson-name">Biology</div>
+                                            <div class="tt-lesson-teacher">Dr. Ihejirika</div>
+                                            <div class="tt-lesson-room">Lab A</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="tt-cell">
+                                        <div class="tt-lesson s-chem">
+                                            <div class="tt-lesson-name">Chemistry</div>
+                                            <div class="tt-lesson-teacher">Mrs. Adekola</div>
+                                            <div class="tt-lesson-room">Lab B</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="tt-cell">
+                                        <div class="tt-lesson s-fmath">
+                                            <div class="tt-lesson-name">Further Maths</div>
+                                            <div class="tt-lesson-teacher">Mr. Olusola</div>
+                                            <div class="tt-lesson-room">Room 8</div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <!-- Period 2 -->
+                            <tr>
+                                <td>
+                                    <div class="tt-time">8:40 – 9:20<span>Period 2</span></div>
+                                </td>
+                                <td>
+                                    <div class="tt-cell">
+                                        <div class="tt-lesson s-phy">
+                                            <div class="tt-lesson-name">Physics</div>
+                                            <div class="tt-lesson-teacher">Mr. Adekunle</div>
+                                            <div class="tt-lesson-room">Lab C</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="tt-cell">
+                                        <div class="tt-lesson s-math">
+                                            <div class="tt-lesson-name">Mathematics</div>
+                                            <div class="tt-lesson-teacher">Mr. Moses</div>
+                                            <div class="tt-lesson-room">Room 12</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="today-col">
+                                    <div class="tt-cell">
+                                        <div class="tt-lesson s-crs">
+                                            <div class="tt-lesson-name">C.R.S / I.R.S</div>
+                                            <div class="tt-lesson-teacher">Pastor Okeke</div>
+                                            <div class="tt-lesson-room">Room 4</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="tt-cell">
+                                        <div class="tt-lesson s-eng">
+                                            <div class="tt-lesson-name">English Lit.</div>
+                                            <div class="tt-lesson-teacher">Mrs. Adeleke</div>
+                                            <div class="tt-lesson-room">Room 1</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="tt-cell">
+                                        <div class="tt-lesson s-civic">
+                                            <div class="tt-lesson-name">Civic Edu.</div>
+                                            <div class="tt-lesson-teacher">Mr. Ojo</div>
+                                            <div class="tt-lesson-room">Room 3</div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <!-- Period 3 -->
+                            <tr>
+                                <td>
+                                    <div class="tt-time">9:20 – 10:00<span>Period 3</span></div>
+                                </td>
+                                <td>
+                                    <div class="tt-cell">
+                                        <div class="tt-lesson s-chem">
+                                            <div class="tt-lesson-name">Chemistry</div>
+                                            <div class="tt-lesson-teacher">Mrs. Adekola</div>
+                                            <div class="tt-lesson-room">Lab B</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="tt-cell">
+                                        <div class="tt-lesson s-bio">
+                                            <div class="tt-lesson-name">Biology</div>
+                                            <div class="tt-lesson-teacher">Dr. Ihejirika</div>
+                                            <div class="tt-lesson-room">Lab A</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="today-col">
+                                    <div class="tt-cell">
+                                        <div class="tt-lesson s-math">
+                                            <div class="tt-lesson-name">Mathematics</div>
+                                            <div class="tt-lesson-teacher">Mr. Moses</div>
+                                            <div class="tt-lesson-room">Room 12</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="tt-cell">
+                                        <div class="tt-lesson s-phy">
+                                            <div class="tt-lesson-name">Physics</div>
+                                            <div class="tt-lesson-teacher">Mr. Adekunle</div>
+                                            <div class="tt-lesson-room">Lab C</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="tt-cell">
+                                        <div class="tt-lesson s-math">
+                                            <div class="tt-lesson-name">Mathematics</div>
+                                            <div class="tt-lesson-teacher">Mr. Moses</div>
+                                            <div class="tt-lesson-room">Room 12</div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <!-- Break -->
+                            <tr class="tt-break">
+                                <td colspan="6">
+                                    <div class="tt-break-content">☕ Short Break — 10:00 to 10:20</div>
+                                </td>
+                            </tr>
+                            <!-- Period 4 -->
+                            <tr>
+                                <td>
+                                    <div class="tt-time">10:20 – 11:00<span>Period 4</span></div>
+                                </td>
+                                <td>
+                                    <div class="tt-cell">
+                                        <div class="tt-lesson s-fmath">
+                                            <div class="tt-lesson-name">Further Maths</div>
+                                            <div class="tt-lesson-teacher">Mr. Olusola</div>
+                                            <div class="tt-lesson-room">Room 8</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="tt-cell">
+                                        <div class="tt-lesson s-chem">
+                                            <div class="tt-lesson-name">Chemistry</div>
+                                            <div class="tt-lesson-teacher">Mrs. Adekola</div>
+                                            <div class="tt-lesson-room">Lab B</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="today-col">
+                                    <div class="tt-cell">
+                                        <div class="tt-lesson s-phy">
+                                            <div class="tt-lesson-name">Physics</div>
+                                            <div class="tt-lesson-teacher">Mr. Adekunle</div>
+                                            <div class="tt-lesson-room">Lab C</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="tt-cell">
+                                        <div class="tt-lesson s-bio">
+                                            <div class="tt-lesson-name">Biology</div>
+                                            <div class="tt-lesson-teacher">Dr. Ihejirika</div>
+                                            <div class="tt-lesson-room">Lab A</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="tt-cell">
+                                        <div class="tt-lesson s-chem">
+                                            <div class="tt-lesson-name">Chemistry</div>
+                                            <div class="tt-lesson-teacher">Mrs. Adekola</div>
+                                            <div class="tt-lesson-room">Lab B</div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <!-- Period 5 -->
+                            <tr>
+                                <td>
+                                    <div class="tt-time">11:00 – 11:40<span>Period 5</span></div>
+                                </td>
+                                <td>
+                                    <div class="tt-cell">
+                                        <div class="tt-lesson s-civic">
+                                            <div class="tt-lesson-name">Civic Edu.</div>
+                                            <div class="tt-lesson-teacher">Mr. Ojo</div>
+                                            <div class="tt-lesson-room">Room 3</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="tt-cell">
+                                        <div class="tt-lesson s-phy">
+                                            <div class="tt-lesson-name">Physics</div>
+                                            <div class="tt-lesson-teacher">Mr. Adekunle</div>
+                                            <div class="tt-lesson-room">Lab C</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="today-col">
+                                    <div class="tt-cell">
+                                        <div class="tt-lesson s-eng">
+                                            <div class="tt-lesson-name">English Lang.</div>
+                                            <div class="tt-lesson-teacher">Mrs. Adeleke</div>
+                                            <div class="tt-lesson-room">Room 1</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="tt-cell">
+                                        <div class="tt-lesson s-fmath">
+                                            <div class="tt-lesson-name">Further Maths</div>
+                                            <div class="tt-lesson-teacher">Mr. Olusola</div>
+                                            <div class="tt-lesson-room">Room 8</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="tt-cell">
+                                        <div class="tt-lesson s-bio">
+                                            <div class="tt-lesson-name">Biology</div>
+                                            <div class="tt-lesson-teacher">Dr. Ihejirika</div>
+                                            <div class="tt-lesson-room">Lab A</div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <!-- Long Break -->
+                            <tr class="tt-break">
+                                <td colspan="6">
+                                    <div class="tt-break-content">🍽️ Lunch Break — 11:40 to 12:20 PM</div>
+                                </td>
+                            </tr>
+                            <!-- Period 6 -->
+                            <tr>
+                                <td>
+                                    <div class="tt-time">12:20 – 1:00<span>Period 6</span></div>
+                                </td>
+                                <td>
+                                    <div class="tt-cell">
+                                        <div class="tt-lesson s-eng">
+                                            <div class="tt-lesson-name">English Lang.</div>
+                                            <div class="tt-lesson-teacher">Mrs. Adeleke</div>
+                                            <div class="tt-lesson-room">Room 1</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="tt-cell">
+                                        <div class="tt-lesson s-civic">
+                                            <div class="tt-lesson-name">Civic Edu.</div>
+                                            <div class="tt-lesson-teacher">Mr. Ojo</div>
+                                            <div class="tt-lesson-room">Room 3</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="today-col">
+                                    <div class="tt-cell">
+                                        <div class="tt-lesson s-fmath">
+                                            <div class="tt-lesson-name">Further Maths</div>
+                                            <div class="tt-lesson-teacher">Mr. Olusola</div>
+                                            <div class="tt-lesson-room">Room 8</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="tt-cell">
+                                        <div class="tt-lesson s-crs">
+                                            <div class="tt-lesson-name">C.R.S / I.R.S</div>
+                                            <div class="tt-lesson-teacher">Pastor Okeke</div>
+                                            <div class="tt-lesson-room">Room 4</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="tt-cell">
+                                        <div class="tt-lesson s-pe">
+                                            <div class="tt-lesson-name">Sport / P.E.</div>
+                                            <div class="tt-lesson-teacher">Coach Emeka</div>
+                                            <div class="tt-lesson-room">Field</div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <!-- Period 7 -->
+                            <tr>
+                                <td>
+                                    <div class="tt-time">1:00 – 1:40<span>Period 7</span></div>
+                                </td>
+                                <td>
+                                    <div class="tt-cell">
+                                        <div class="tt-lesson s-crs">
+                                            <div class="tt-lesson-name">C.R.S / I.R.S</div>
+                                            <div class="tt-lesson-teacher">Pastor Okeke</div>
+                                            <div class="tt-lesson-room">Room 4</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="tt-cell">
+                                        <div class="tt-lesson s-fmath">
+                                            <div class="tt-lesson-name">Further Maths</div>
+                                            <div class="tt-lesson-teacher">Mr. Olusola</div>
+                                            <div class="tt-lesson-room">Room 8</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="today-col">
+                                    <div class="tt-cell">
+                                        <div class="tt-lesson s-chem">
+                                            <div class="tt-lesson-name">Chemistry</div>
+                                            <div class="tt-lesson-teacher">Mrs. Adekola</div>
+                                            <div class="tt-lesson-room">Lab B</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="tt-cell">
+                                        <div class="tt-lesson s-civic">
+                                            <div class="tt-lesson-name">Civic Edu.</div>
+                                            <div class="tt-lesson-teacher">Mr. Ojo</div>
+                                            <div class="tt-lesson-room">Room 3</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="tt-cell">
+                                        <div class="tt-lesson s-eng">
+                                            <div class="tt-lesson-name">English Lang.</div>
+                                            <div class="tt-lesson-teacher">Mrs. Adeleke</div>
+                                            <div class="tt-lesson-room">Room 1</div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Legend -->
+                <div
+                    style="display:flex; gap:12px; flex-wrap:wrap; margin-top:16px; padding:14px 18px; background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-md);">
+                    <span
+                        style="font-size:12px; font-weight:600; color:var(--text-muted); margin-right:4px;">Subjects:</span>
+                    <span class="badge badge-primary">📐 Mathematics</span>
+                    <span class="badge" style="background:rgba(142,68,173,0.1);color:#8e44ad;">📖 English</span>
+                    <span class="badge badge-danger">🧬 Biology</span>
+                    <span class="badge" style="background:rgba(142,68,173,0.08);color:#6c3483;">⚗️ Chemistry</span>
+                    <span class="badge" style="background:rgba(44,62,80,0.1);color:#2c3e50;">⚡ Physics</span>
+                    <span class="badge badge-success">🏃 P.E.</span>
+                    <span style="margin-left:auto; font-size:12px; color:var(--secondary); font-weight:600;">★ Today is
+                        highlighted in gold</span>
+                </div>
+            </main>
+
+            <footer class="page-footer">
+                <span>© 2025 <strong>Maverick International School</strong></span>
+                <span>Academic Year: <strong>2025/2026</strong> · Term 3</span>
+            </footer>
+        </div>
+    </div>
+    <script src="js/main.js"></script>
+    <script>
+        document.querySelectorAll('.class-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.class-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                Portal.showToast(`Showing timetable for ${btn.textContent}`, 'info', 2000);
+            });
+        });
+    </script>
+</body>
+
+</html>

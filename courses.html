@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Courses — Maverick International Portal</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="css/style.css" />
+    <style>
+        .course-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .course-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .course-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .course-header {
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 42px;
+            position: relative;
+        }
+
+        .course-header::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            opacity: 0.12;
+        }
+
+        .course-body {
+            padding: 18px;
+        }
+
+        .course-name {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .course-code {
+            font-size: 11.5px;
+            color: var(--text-muted);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .course-meta {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 12px 0;
+        }
+
+        .course-teacher {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12.5px;
+            color: var(--text-secondary);
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid var(--border);
+        }
+
+        .course-teacher .t-avatar {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            font-size: 10px;
+            font-weight: 700;
+            color: #fff;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .cc-math {
+            background: linear-gradient(135deg, #1e5aad, #2870d4);
+        }
+
+        .cc-english {
+            background: linear-gradient(135deg, #8e44ad, #9b59b6);
+        }
+
+        .cc-science {
+            background: linear-gradient(135deg, #16a085, #1abc9c);
+        }
+
+        .cc-history {
+            background: linear-gradient(135deg, #d35400, #e67e22);
+        }
+
+        .cc-geo {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+        }
+
+        .cc-commerce {
+            background: linear-gradient(135deg, #c9a84c, #e8c96d);
+        }
+
+        .cc-bio {
+            background: linear-gradient(135deg, #e74c3c, #e95d4e);
+        }
+
+        .cc-phy {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+        }
+
+        .cc-chem {
+            background: linear-gradient(135deg, #8e44ad, #6c3483);
+        }
+
+        .cc-civic {
+            background: linear-gradient(135deg, #1a5276, #1e8bc3);
+        }
+
+        .cc-crs {
+            background: linear-gradient(135deg, #7d6608, #b8860b);
+        }
+
+        .cc-agric {
+            background: linear-gradient(135deg, #196f3d, #239b56);
+        }
+
+        @media (max-width: 768px) {
+            .course-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="portal-shell">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-brand">
+                <div class="brand-icon">🎓</div>
+                <div class="brand-text"><span class="brand-name">Maverick International</span><span
+                        class="brand-tagline">School Portal</span></div>
+            </div>
+            <nav class="sidebar-nav">
+                <span class="nav-section-label">Main</span>
+                <ul>
+                    <li class="nav-item"><a href="dashboard.html" class="nav-link"><span class="nav-icon">🏠</span>
+                            Dashboard</a></li>
+                    <li class="nav-item"><a href="students.html" class="nav-link"><span class="nav-icon">👨‍🎓</span>
+                            Students</a></li>
+                    <li class="nav-item"><a href="courses.html" class="nav-link active"><span class="nav-icon">📚</span>
+                            Courses</a></li>
+                    <li class="nav-item"><a href="results.html" class="nav-link"><span class="nav-icon">📊</span>
+                            Results <span class="nav-badge">New</span></a></li>
+                    <li class="nav-item"><a href="timetable.html" class="nav-link"><span class="nav-icon">📅</span>
+                            Timetable</a></li>
+                </ul>
+                <span class="nav-section-label">Communication</span>
+                <ul>
+                    <li class="nav-item"><a href="notices.html" class="nav-link"><span class="nav-icon">📢</span>
+                            Notices <span class="nav-badge">3</span></a></li>
+                    <li class="nav-item"><a href="#" class="nav-link"><span class="nav-icon">💬</span> Messages</a></li>
+                </ul>
+                <span class="nav-section-label">Account</span>
+                <ul>
+                    <li class="nav-item"><a href="profile.html" class="nav-link"><span class="nav-icon">👤</span>
+                            Profile</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link"><span class="nav-icon">⚙️</span> Settings</a></li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="sidebar-user">
+                    <div class="user-avatar-sm" data-user-initials>EO</div>
+                    <div class="user-info-sm">
+                        <div class="user-name-sm" data-user-name>Admin</div>
+                        <div class="user-role-sm" data-user-role>Administrator</div>
+                    </div><button class="logout-btn" onclick="Portal.logout()">🚪</button>
+                </div>
+            </div>
+        </aside>
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+        <div class="main-content">
+            <header class="top-header">
+                <div class="header-left">
+                    <button class="menu-toggle" id="menuToggle">☰</button>
+                    <div class="page-title-area">
+                        <h1>Courses</h1>
+                        <div class="breadcrumb"><span>Portal</span><span class="sep">›</span><span>Courses</span></div>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <div class="header-time"><span class="time" id="liveTime">--:--</span><span class="date"
+                            id="liveDate"></span></div>
+                    <button class="header-action-btn">🔔<span class="notif-dot"></span></button>
+                    <div class="header-user" data-dropdown="userMenuCou">
+                        <div class="user-avatar" data-user-initials>EO</div>
+                        <div class="user-details"><span class="user-name" data-user-name>Admin</span><span
+                                class="user-role">Admin</span></div><span>▾</span>
+                    </div>
+                    <div class="dropdown-menu" id="userMenuCou"><a href="profile.html" class="dropdown-item">👤
+                            Profile</a>
+                        <div class="dropdown-divider"></div><button class="dropdown-item danger"
+                            onclick="Portal.logout()">🚪 Logout</button>
+                    </div>
+                </div>
+            </header>
+
+            <main class="page-content">
+                <!-- Toolbar -->
+                <div
+                    style="display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:24px; flex-wrap:wrap;">
+                    <div>
+                        <h2 style="font-size:20px; font-weight:700;">All Courses <span
+                                style="font-size:14px; color:var(--text-muted); font-weight:500;">(48 total)</span></h2>
+                        <p style="font-size:13px; color:var(--text-muted); margin-top:2px;">Active subjects across all
+                            classes — 2025/2026 Session</p>
+                    </div>
+                    <div style="display:flex; gap:10px;">
+                        <div class="search-bar">
+                            <span class="search-icon">🔍</span>
+                            <input type="text" placeholder="Search courses..." />
+                        </div>
+                        <button class="btn btn-gold">+ Add Course</button>
+                    </div>
+                </div>
+
+                <!-- Cards -->
+                <div class="course-grid animate-fadeInUp">
+
+                    <div class="course-card">
+                        <div class="course-header cc-math">➗</div>
+                        <div class="course-body">
+                            <div class="course-name">Mathematics</div>
+                            <div class="course-code">MATH301 · SS 3</div>
+                            <div class="course-meta">
+                                <span class="badge badge-primary">SS 3A, 3B, 3C</span>
+                                <span class="badge badge-success">Active</span>
+                            </div>
+                            <div style="font-size:12px; color:var(--text-muted); margin-bottom:8px;">Students:
+                                <strong>156</strong> &nbsp;|&nbsp; Units: <strong>4</strong></div>
+                            <div class="progress-bar-wrap">
+                                <div class="progress-bar-fill" style="width:82%"></div>
+                            </div>
+                            <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">82% syllabus covered
+                            </div>
+                            <div class="course-teacher">
+                                <div class="t-avatar">MO</div> Mr. Moses Ogbuike
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="course-card">
+                        <div class="course-header cc-english">📖</div>
+                        <div class="course-body">
+                            <div class="course-name">English Language</div>
+                            <div class="course-code">ENG301 · SS 3</div>
+                            <div class="course-meta">
+                                <span class="badge badge-primary">SS 3A, 3B, 3C</span>
+                                <span class="badge badge-success">Active</span>
+                            </div>
+                            <div style="font-size:12px; color:var(--text-muted); margin-bottom:8px;">Students:
+                                <strong>156</strong> &nbsp;|&nbsp; Units: <strong>3</strong></div>
+                            <div class="progress-bar-wrap">
+                                <div class="progress-bar-fill" style="width:90%"></div>
+                            </div>
+                            <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">90% syllabus covered
+                            </div>
+                            <div class="course-teacher">
+                                <div class="t-avatar">NA</div> Mrs. Ngozi Adeleke
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="course-card">
+                        <div class="course-header cc-science">🔬</div>
+                        <div class="course-body">
+                            <div class="course-name">Further Mathematics</div>
+                            <div class="course-code">FMATH301 · SS 3</div>
+                            <div class="course-meta">
+                                <span class="badge badge-info">Science Track</span>
+                                <span class="badge badge-success">Active</span>
+                            </div>
+                            <div style="font-size:12px; color:var(--text-muted); margin-bottom:8px;">Students:
+                                <strong>72</strong> &nbsp;|&nbsp; Units: <strong>4</strong></div>
+                            <div class="progress-bar-wrap">
+                                <div class="progress-bar-fill" style="width:75%"></div>
+                            </div>
+                            <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">75% syllabus covered
+                            </div>
+                            <div class="course-teacher">
+                                <div class="t-avatar">AO</div> Mr. Adebisi Olusola
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="course-card">
+                        <div class="course-header cc-bio">🧬</div>
+                        <div class="course-body">
+                            <div class="course-name">Biology</div>
+                            <div class="course-code">BIO301 · SS 3</div>
+                            <div class="course-meta">
+                                <span class="badge badge-info">Science Track</span>
+                                <span class="badge badge-success">Active</span>
+                            </div>
+                            <div style="font-size:12px; color:var(--text-muted); margin-bottom:8px;">Students:
+                                <strong>110</strong> &nbsp;|&nbsp; Units: <strong>4</strong></div>
+                            <div class="progress-bar-wrap">
+                                <div class="progress-bar-fill" style="width:88%"></div>
+                            </div>
+                            <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">88% syllabus covered
+                            </div>
+                            <div class="course-teacher">
+                                <div class="t-avatar">CI</div> Dr. Chioma Ihejirika
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="course-card">
+                        <div class="course-header cc-chem">⚗️</div>
+                        <div class="course-body">
+                            <div class="course-name">Chemistry</div>
+                            <div class="course-code">CHEM301 · SS 3</div>
+                            <div class="course-meta">
+                                <span class="badge badge-info">Science Track</span>
+                                <span class="badge badge-success">Active</span>
+                            </div>
+                            <div style="font-size:12px; color:var(--text-muted); margin-bottom:8px;">Students:
+                                <strong>110</strong> &nbsp;|&nbsp; Units: <strong>4</strong></div>
+                            <div class="progress-bar-wrap">
+                                <div class="progress-bar-fill" style="width:79%"></div>
+                            </div>
+                            <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">79% syllabus covered
+                            </div>
+                            <div class="course-teacher">
+                                <div class="t-avatar">EA</div> Mrs. Esther Adekola
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="course-card">
+                        <div class="course-header cc-phy">⚡</div>
+                        <div class="course-body">
+                            <div class="course-name">Physics</div>
+                            <div class="course-code">PHY301 · SS 3</div>
+                            <div class="course-meta">
+                                <span class="badge badge-info">Science Track</span>
+                                <span class="badge badge-success">Active</span>
+                            </div>
+                            <div style="font-size:12px; color:var(--text-muted); margin-bottom:8px;">Students:
+                                <strong>98</strong> &nbsp;|&nbsp; Units: <strong>4</strong></div>
+                            <div class="progress-bar-wrap">
+                                <div class="progress-bar-fill" style="width:71%"></div>
+                            </div>
+                            <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">71% syllabus covered
+                            </div>
+                            <div class="course-teacher">
+                                <div class="t-avatar">KA</div> Mr. Kayode Adekunle
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="course-card">
+                        <div class="course-header cc-commerce">💰</div>
+                        <div class="course-body">
+                            <div class="course-name">Commerce</div>
+                            <div class="course-code">COM301 · SS 3</div>
+                            <div class="course-meta">
+                                <span class="badge badge-gold">Commercial</span>
+                                <span class="badge badge-success">Active</span>
+                            </div>
+                            <div style="font-size:12px; color:var(--text-muted); margin-bottom:8px;">Students:
+                                <strong>88</strong> &nbsp;|&nbsp; Units: <strong>3</strong></div>
+                            <div class="progress-bar-wrap">
+                                <div class="progress-bar-fill" style="width:85%"></div>
+                            </div>
+                            <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">85% syllabus covered
+                            </div>
+                            <div class="course-teacher">
+                                <div class="t-avatar">RO</div> Mrs. Ronke Oladele
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="course-card">
+                        <div class="course-header cc-history">📜</div>
+                        <div class="course-body">
+                            <div class="course-name">History</div>
+                            <div class="course-code">HIST301 · SS 3</div>
+                            <div class="course-meta">
+                                <span class="badge badge-warning">Arts Track</span>
+                                <span class="badge badge-success">Active</span>
+                            </div>
+                            <div style="font-size:12px; color:var(--text-muted); margin-bottom:8px;">Students:
+                                <strong>64</strong> &nbsp;|&nbsp; Units: <strong>3</strong></div>
+                            <div class="progress-bar-wrap">
+                                <div class="progress-bar-fill" style="width:93%"></div>
+                            </div>
+                            <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">93% syllabus covered
+                            </div>
+                            <div class="course-teacher">
+                                <div class="t-avatar">BE</div> Mr. Biodun Elegbede
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="course-card">
+                        <div class="course-header cc-civic">🏛️</div>
+                        <div class="course-body">
+                            <div class="course-name">Civic Education</div>
+                            <div class="course-code">CIV301 · All SS</div>
+                            <div class="course-meta">
+                                <span class="badge badge-primary">Core Subject</span>
+                                <span class="badge badge-success">Active</span>
+                            </div>
+                            <div style="font-size:12px; color:var(--text-muted); margin-bottom:8px;">Students:
+                                <strong>476</strong> &nbsp;|&nbsp; Units: <strong>2</strong></div>
+                            <div class="progress-bar-wrap">
+                                <div class="progress-bar-fill" style="width:96%"></div>
+                            </div>
+                            <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">96% syllabus covered
+                            </div>
+                            <div class="course-teacher">
+                                <div class="t-avatar">TO</div> Mr. Tunde Ojo
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="course-card">
+                        <div class="course-header cc-agric">🌾</div>
+                        <div class="course-body">
+                            <div class="course-name">Agricultural Science</div>
+                            <div class="course-code">AGR201 · SS 1-2</div>
+                            <div class="course-meta">
+                                <span class="badge badge-primary">All Tracks</span>
+                                <span class="badge badge-success">Active</span>
+                            </div>
+                            <div style="font-size:12px; color:var(--text-muted); margin-bottom:8px;">Students:
+                                <strong>312</strong> &nbsp;|&nbsp; Units: <strong>3</strong></div>
+                            <div class="progress-bar-wrap">
+                                <div class="progress-bar-fill" style="width:68%"></div>
+                            </div>
+                            <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">68% syllabus covered
+                            </div>
+                            <div class="course-teacher">
+                                <div class="t-avatar">FN</div> Mrs. Flora Nweze
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="course-card">
+                        <div class="course-header cc-geo">🌍</div>
+                        <div class="course-body">
+                            <div class="course-name">Geography</div>
+                            <div class="course-code">GEO201 · SS 1-2</div>
+                            <div class="course-meta">
+                                <span class="badge badge-warning">Arts / Social</span>
+                                <span class="badge badge-success">Active</span>
+                            </div>
+                            <div style="font-size:12px; color:var(--text-muted); margin-bottom:8px;">Students:
+                                <strong>142</strong> &nbsp;|&nbsp; Units: <strong>3</strong></div>
+                            <div class="progress-bar-wrap">
+                                <div class="progress-bar-fill" style="width:80%"></div>
+                            </div>
+                            <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">80% syllabus covered
+                            </div>
+                            <div class="course-teacher">
+                                <div class="t-avatar">AA</div> Miss. Aisha Abdullahi
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="course-card">
+                        <div class="course-header cc-crs">✝️</div>
+                        <div class="course-body">
+                            <div class="course-name">C.R.S / I.R.S</div>
+                            <div class="course-code">CRS301 · All SS</div>
+                            <div class="course-meta">
+                                <span class="badge badge-primary">Core Subject</span>
+                                <span class="badge badge-success">Active</span>
+                            </div>
+                            <div style="font-size:12px; color:var(--text-muted); margin-bottom:8px;">Students:
+                                <strong>476</strong> &nbsp;|&nbsp; Units: <strong>2</strong></div>
+                            <div class="progress-bar-wrap">
+                                <div class="progress-bar-fill" style="width:95%"></div>
+                            </div>
+                            <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">95% syllabus covered
+                            </div>
+                            <div class="course-teacher">
+                                <div class="t-avatar">PO</div> Pastor Paul Okeke
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </main>
+            <footer class="page-footer">
+                <span>© 2025 <strong>Maverick International School</strong></span>
+                <span>Academic Year: <strong>2025/2026</strong> · Term 3</span>
+            </footer>
+        </div>
+    </div>
+    <script src="js/main.js"></script>
+</body>
+
+</html>

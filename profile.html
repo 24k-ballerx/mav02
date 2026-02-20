@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Profile — Maverick International Portal</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="css/style.css" />
+    <style>
+        .profile-banner {
+            background: linear-gradient(135deg, #0a1628 0%, #1e5aad 100%);
+            border-radius: var(--radius-lg);
+            height: 160px;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 72px;
+        }
+
+        .profile-banner::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+            background-size: 30px 30px;
+        }
+
+        .profile-avatar-wrap {
+            position: absolute;
+            bottom: -56px;
+            left: 32px;
+        }
+
+        .profile-avatar {
+            width: 112px;
+            height: 112px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border: 5px solid #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 38px;
+            font-weight: 800;
+            color: #fff;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .profile-avatar-edit {
+            position: absolute;
+            bottom: 4px;
+            right: 4px;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            cursor: pointer;
+            border: 3px solid #fff;
+            transition: var(--transition);
+        }
+
+        .profile-avatar-edit:hover {
+            transform: scale(1.1);
+        }
+
+        .profile-header-info {
+            padding: 8px 32px 0 160px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+
+        .profile-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 26px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .profile-role {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 4px;
+            flex-wrap: wrap;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .info-field {
+            padding: 14px 16px;
+            background: var(--bg-base);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+        }
+
+        .info-label {
+            font-size: 10.5px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .info-val {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-top: 3px;
+        }
+
+        .stats-profile {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .profile-stat {
+            background: var(--bg-base);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+
+        .profile-stat-val {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+
+        .profile-stat-label {
+            font-size: 11.5px;
+            color: var(--text-muted);
+            margin-top: 3px;
+        }
+
+        .activity-timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .tl-item {
+            display: flex;
+            gap: 14px;
+            padding: 14px 0;
+            border-bottom: 1px solid var(--border);
+            position: relative;
+        }
+
+        .tl-item:last-child {
+            border-bottom: none;
+        }
+
+        .tl-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--accent);
+            margin-top: 5px;
+            flex-shrink: 0;
+        }
+
+        .tl-content {
+            flex: 1;
+        }
+
+        .tl-event {
+            font-size: 13.5px;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .tl-time {
+            font-size: 11.5px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .subject-performance {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .sub-perf-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .sub-perf-name {
+            width: 130px;
+            font-size: 13px;
+            font-weight: 600;
+            flex-shrink: 0;
+            color: var(--text-primary);
+        }
+
+        .sub-perf-bar {
+            flex: 1;
+            height: 8px;
+            background: var(--bg-base);
+            border-radius: 99px;
+            overflow: hidden;
+        }
+
+        .sub-perf-fill {
+            height: 100%;
+            border-radius: 99px;
+        }
+
+        .sub-perf-score {
+            width: 40px;
+            font-size: 13px;
+            font-weight: 700;
+            text-align: right;
+            color: var(--text-primary);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="portal-shell">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-brand">
+                <div class="brand-icon">🎓</div>
+                <div class="brand-text"><span class="brand-name">Maverick International</span><span
+                        class="brand-tagline">School Portal</span></div>
+            </div>
+            <nav class="sidebar-nav">
+                <span class="nav-section-label">Main</span>
+                <ul>
+                    <li class="nav-item"><a href="dashboard.html" class="nav-link"><span class="nav-icon">🏠</span>
+                            Dashboard</a></li>
+                    <li class="nav-item"><a href="students.html" class="nav-link"><span class="nav-icon">👨‍🎓</span>
+                            Students</a></li>
+                    <li class="nav-item"><a href="courses.html" class="nav-link"><span class="nav-icon">📚</span>
+                            Courses</a></li>
+                    <li class="nav-item"><a href="results.html" class="nav-link"><span class="nav-icon">📊</span>
+                            Results <span class="nav-badge">New</span></a></li>
+                    <li class="nav-item"><a href="timetable.html" class="nav-link"><span class="nav-icon">📅</span>
+                            Timetable</a></li>
+                </ul>
+                <span class="nav-section-label">Communication</span>
+                <ul>
+                    <li class="nav-item"><a href="notices.html" class="nav-link"><span class="nav-icon">📢</span>
+                            Notices <span class="nav-badge">3</span></a></li>
+                    <li class="nav-item"><a href="#" class="nav-link"><span class="nav-icon">💬</span> Messages</a></li>
+                </ul>
+                <span class="nav-section-label">Account</span>
+                <ul>
+                    <li class="nav-item"><a href="profile.html" class="nav-link active"><span class="nav-icon">👤</span>
+                            Profile</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link"><span class="nav-icon">⚙️</span> Settings</a></li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="sidebar-user">
+                    <div class="user-avatar-sm" data-user-initials>EO</div>
+                    <div class="user-info-sm">
+                        <div class="user-name-sm" data-user-name>Admin</div>
+                        <div class="user-role-sm" data-user-role>Administrator</div>
+                    </div><button class="logout-btn" onclick="Portal.logout()">🚪</button>
+                </div>
+            </div>
+        </aside>
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+        <div class="main-content">
+            <header class="top-header">
+                <div class="header-left">
+                    <button class="menu-toggle" id="menuToggle">☰</button>
+                    <div class="page-title-area">
+                        <h1>My Profile</h1>
+                        <div class="breadcrumb"><span>Portal</span><span class="sep">›</span><span>Profile</span></div>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <div class="header-time"><span class="time" id="liveTime">--:--</span><span class="date"
+                            id="liveDate"></span></div>
+                    <button class="header-action-btn">🔔<span class="notif-dot"></span></button>
+                    <div class="header-user" data-dropdown="userMenuProf">
+                        <div class="user-avatar" data-user-initials>EO</div>
+                        <div class="user-details"><span class="user-name" data-user-name>Admin</span><span
+                                class="user-role">Admin</span></div><span>▾</span>
+                    </div>
+                    <div class="dropdown-menu" id="userMenuProf"><a href="profile.html" class="dropdown-item">👤
+                            Profile</a>
+                        <div class="dropdown-divider"></div><button class="dropdown-item danger"
+                            onclick="Portal.logout()">🚪 Logout</button>
+                    </div>
+                </div>
+            </header>
+
+            <main class="page-content">
+                <!-- Profile Banner + Avatar -->
+                <div class="animate-fadeInUp">
+                    <div class="profile-banner">
+                        <div class="profile-avatar-wrap">
+                            <div class="profile-avatar" data-user-initials>EO</div>
+                            <div class="profile-avatar-edit">✏️</div>
+                        </div>
+                    </div>
+
+                    <div class="profile-header-info">
+                        <div>
+                            <div class="profile-name" data-user-name>Dr. Emmanuel Okafor</div>
+                            <div class="profile-role">
+                                <span class="badge badge-primary" data-user-role>Administrator</span>
+                                <span class="badge badge-gold">Principal</span>
+                                <span style="font-size:12px; color:var(--text-muted);">Since 2015</span>
+                            </div>
+                        </div>
+                        <div style="display:flex; gap:8px;">
+                            <button class="btn btn-outline btn-sm">📤 Share Profile</button>
+                            <button class="btn btn-gold btn-sm"
+                                onclick="Portal.showToast('Profile updated!', 'success')">✏️ Edit Profile</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Content Grid -->
+                <div class="grid-3" style="gap:24px; align-items:start;">
+                    <!-- Left Column: Info + Stats -->
+                    <div style="display:flex; flex-direction:column; gap:20px;">
+                        <!-- Personal Info -->
+                        <div class="card animate-fadeInUp">
+                            <div class="card-header">
+                                <div class="card-title">👤 Personal Information</div>
+                            </div>
+                            <div class="card-body">
+                                <div class="info-grid">
+                                    <div class="info-field">
+                                        <div class="info-label">First Name</div>
+                                        <div class="info-val">Emmanuel</div>
+                                    </div>
+                                    <div class="info-field">
+                                        <div class="info-label">Last Name</div>
+                                        <div class="info-val">Okafor</div>
+                                    </div>
+                                    <div class="info-field info-grid" style="grid-column:span 2; display:block;">
+                                        <div class="info-label">Email Address</div>
+                                        <div class="info-val" data-user-email style="color:var(--accent);">
+                                            admin@maverick.edu.ng</div>
+                                    </div>
+                                    <div class="info-field">
+                                        <div class="info-label">Phone</div>
+                                        <div class="info-val">+234 803 456 7890</div>
+                                    </div>
+                                    <div class="info-field">
+                                        <div class="info-label">Staff ID</div>
+                                        <div class="info-val">ADM001</div>
+                                    </div>
+                                    <div class="info-field">
+                                        <div class="info-label">Gender</div>
+                                        <div class="info-val">Male</div>
+                                    </div>
+                                    <div class="info-field">
+                                        <div class="info-label">Date of Birth</div>
+                                        <div class="info-val">12 Oct 1978</div>
+                                    </div>
+                                    <div class="info-field" style="grid-column:span 2;">
+                                        <div class="info-label">Office Address</div>
+                                        <div class="info-val">Principal's Office, Admin Block, Maverick International
+                                            School, V.I Lagos</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Quick Stats -->
+                        <div class="card animate-fadeInUp animate-delay-1">
+                            <div class="card-header">
+                                <div class="card-title">📊 Account Overview</div>
+                            </div>
+                            <div class="card-body">
+                                <div class="stats-profile">
+                                    <div class="profile-stat">
+                                        <div class="profile-stat-val">11</div>
+                                        <div class="profile-stat-label">Years Active</div>
+                                    </div>
+                                    <div class="profile-stat">
+                                        <div class="profile-stat-val" style="color:var(--success);">142</div>
+                                        <div class="profile-stat-label">Staff Managed</div>
+                                    </div>
+                                    <div class="profile-stat">
+                                        <div class="profile-stat-val" style="color:var(--secondary);">38</div>
+                                        <div class="profile-stat-label">Notices Posted</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Middle: Subject Performance (if student) / Activity Log -->
+                    <div style="display:flex; flex-direction:column; gap:20px;">
+                        <!-- Academic Performance (sample for student view) -->
+                        <div class="card animate-fadeInUp animate-delay-1">
+                            <div class="card-header">
+                                <div>
+                                    <div class="card-title">📈 Student View — Academic Performance</div>
+                                    <div class="card-subtitle">SS 3A · Third Term 2025/2026</div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="subject-performance">
+                                    <div class="sub-perf-item">
+                                        <div class="sub-perf-name">Mathematics</div>
+                                        <div class="sub-perf-bar">
+                                            <div class="sub-perf-fill"
+                                                style="width:98%; background:linear-gradient(90deg,#1e5aad,#27ae60)">
+                                            </div>
+                                        </div>
+                                        <div class="sub-perf-score">98</div>
+                                    </div>
+                                    <div class="sub-perf-item">
+                                        <div class="sub-perf-name">Physics</div>
+                                        <div class="sub-perf-bar">
+                                            <div class="sub-perf-fill"
+                                                style="width:94%; background:linear-gradient(90deg,#1e5aad,#2870d4)">
+                                            </div>
+                                        </div>
+                                        <div class="sub-perf-score">94</div>
+                                    </div>
+                                    <div class="sub-perf-item">
+                                        <div class="sub-perf-name">Biology</div>
+                                        <div class="sub-perf-bar">
+                                            <div class="sub-perf-fill"
+                                                style="width:92%; background:linear-gradient(90deg,#16a085,#1abc9c)">
+                                            </div>
+                                        </div>
+                                        <div class="sub-perf-score">92</div>
+                                    </div>
+                                    <div class="sub-perf-item">
+                                        <div class="sub-perf-name">Further Maths</div>
+                                        <div class="sub-perf-bar">
+                                            <div class="sub-perf-fill"
+                                                style="width:84%; background:linear-gradient(90deg,#c9a84c,#e8c96d)">
+                                            </div>
+                                        </div>
+                                        <div class="sub-perf-score">84</div>
+                                    </div>
+                                    <div class="sub-perf-item">
+                                        <div class="sub-perf-name">Chemistry</div>
+                                        <div class="sub-perf-bar">
+                                            <div class="sub-perf-fill"
+                                                style="width:82%; background:linear-gradient(90deg,#8e44ad,#9b59b6)">
+                                            </div>
+                                        </div>
+                                        <div class="sub-perf-score">82</div>
+                                    </div>
+                                    <div class="sub-perf-item">
+                                        <div class="sub-perf-name">English Lang.</div>
+                                        <div class="sub-perf-bar">
+                                            <div class="sub-perf-fill"
+                                                style="width:88%; background:linear-gradient(90deg,#1e5aad,#2870d4)">
+                                            </div>
+                                        </div>
+                                        <div class="sub-perf-score">88</div>
+                                    </div>
+                                    <div class="sub-perf-item">
+                                        <div class="sub-perf-name">Civic Edu.</div>
+                                        <div class="sub-perf-bar">
+                                            <div class="sub-perf-fill"
+                                                style="width:77%; background:linear-gradient(90deg,#1a5276,#1e8bc3)">
+                                            </div>
+                                        </div>
+                                        <div class="sub-perf-score">77</div>
+                                    </div>
+                                    <div class="sub-perf-item">
+                                        <div class="sub-perf-name">C.R.S</div>
+                                        <div class="sub-perf-bar">
+                                            <div class="sub-perf-fill"
+                                                style="width:72%; background:linear-gradient(90deg,#7d6608,#b8860b)">
+                                            </div>
+                                        </div>
+                                        <div class="sub-perf-score">72</div>
+                                    </div>
+                                </div>
+                                <div
+                                    style="margin-top:16px; padding:12px; background:rgba(39,174,96,0.06); border-radius:var(--radius-md); border:1px solid rgba(39,174,96,0.15); display:flex; align-items:center; justify-content:space-between;">
+                                    <div style="font-size:13px; color:var(--success); font-weight:600;">🏆 Overall
+                                        Average: 86.1% — Position: 1st / 52</div>
+                                    <a href="results.html" class="btn btn-outline btn-sm">See Full Report</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Change Password + Activity -->
+                    <div style="display:flex; flex-direction:column; gap:20px;">
+                        <!-- Change Password -->
+                        <div class="card animate-fadeInUp animate-delay-2">
+                            <div class="card-header">
+                                <div class="card-title">🔐 Change Password</div>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label class="form-label">Current Password</label>
+                                    <input type="password" class="form-control" placeholder="••••••••" />
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">New Password</label>
+                                    <input type="password" class="form-control" placeholder="••••••••" />
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Confirm New Password</label>
+                                    <input type="password" class="form-control" placeholder="••••••••" />
+                                </div>
+                                <button class="btn btn-primary" style="width:100%;"
+                                    onclick="Portal.showToast('Password updated successfully!', 'success')">🔑 Update
+                                    Password</button>
+                            </div>
+                        </div>
+
+                        <!-- Recent Activity -->
+                        <div class="card animate-fadeInUp animate-delay-3">
+                            <div class="card-header">
+                                <div class="card-title">📋 Recent Activity</div>
+                            </div>
+                            <div class="card-body" style="padding: 12px 20px;">
+                                <div class="activity-timeline">
+                                    <div class="tl-item">
+                                        <div class="tl-dot"></div>
+                                        <div class="tl-content">
+                                            <div class="tl-event">Logged in from Chrome · Windows 11</div>
+                                            <div class="tl-time">Today, 8:02 AM · Lagos, Nigeria</div>
+                                        </div>
+                                    </div>
+                                    <div class="tl-item">
+                                        <div class="tl-dot" style="background:var(--secondary)"></div>
+                                        <div class="tl-content">
+                                            <div class="tl-event">Posted notice: "Exam Schedule — Urgent"</div>
+                                            <div class="tl-time">Feb 20, 2026 · 10:14 AM</div>
+                                        </div>
+                                    </div>
+                                    <div class="tl-item">
+                                        <div class="tl-dot" style="background:var(--success)"></div>
+                                        <div class="tl-content">
+                                            <div class="tl-event">Added new student: Zara Mohammed</div>
+                                            <div class="tl-time">Feb 19, 2026 · 2:44 PM</div>
+                                        </div>
+                                    </div>
+                                    <div class="tl-item">
+                                        <div class="tl-dot" style="background:var(--warning)"></div>
+                                        <div class="tl-content">
+                                            <div class="tl-event">Updated SS 3A timetable</div>
+                                            <div class="tl-time">Feb 18, 2026 · 11:30 AM</div>
+                                        </div>
+                                    </div>
+                                    <div class="tl-item">
+                                        <div class="tl-dot"></div>
+                                        <div class="tl-content">
+                                            <div class="tl-event">Generated 52 report cards for SS 3A</div>
+                                            <div class="tl-time">Feb 17, 2026 · 4:15 PM</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <footer class="page-footer">
+                <span>© 2025 <strong>Maverick International School</strong></span>
+                <span>Academic Year: <strong>2025/2026</strong> · Term 3</span>
+            </footer>
+        </div>
+    </div>
+    <script src="js/main.js"></script>
+</body>
+
+</html>

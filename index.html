@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login — Maverick International School Portal</title>
+  <meta name="description" content="Securely access the Maverick International School Portal. Student, Teacher, Admin and Parent login." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --primary: #0a1628;
+      --secondary: #c9a84c;
+      --accent: #1e5aad;
+      --bg: #f0f2f7;
+      --danger: #e74c3c;
+      --success: #27ae60;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      overflow: hidden;
+      background: var(--primary);
+    }
+
+    /* ---- Left Panel ---- */
+    .login-left {
+      width: 55%;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 60px;
+    }
+
+    .login-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(160deg, #0a2555 0%, #061830 60%, #030c1a 100%);
+      z-index: 0;
+    }
+
+    /* Decorative orbs */
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.25;
+      animation: floatOrb 8s ease-in-out infinite alternate;
+    }
+    .orb-1 { width: 400px; height: 400px; background: var(--accent); top: -80px; left: -80px; }
+    .orb-2 { width: 300px; height: 300px; background: var(--secondary); bottom: 100px; right: 0; animation-delay: -3s; }
+    .orb-3 { width: 200px; height: 200px; background: #8e44ad; top: 50%; left: 50%; animation-delay: -6s; }
+
+    @keyframes floatOrb {
+      from { transform: translate(0, 0) scale(1); }
+      to   { transform: translate(20px, 20px) scale(1.1); }
+    }
+
+    /* Grid pattern */
+    .login-bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+
+    .login-left-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .school-crest {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 48px;
+    }
+
+    .crest-icon {
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, var(--secondary), #f0d87a);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      box-shadow: 0 8px 30px rgba(201,168,76,0.4);
+      flex-shrink: 0;
+    }
+
+    .crest-text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .crest-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.2;
+    }
+
+    .crest-sub {
+      font-size: 11px;
+      color: var(--secondary);
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .login-hero-text {
+      margin-bottom: 48px;
+    }
+
+    .login-hero-text h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 44px;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.15;
+      margin-bottom: 16px;
+    }
+
+    .login-hero-text h2 span {
+      color: var(--secondary);
+    }
+
+    .login-hero-text p {
+      font-size: 15px;
+      color: rgba(255,255,255,0.55);
+      line-height: 1.7;
+      max-width: 420px;
+    }
+
+    .login-stats {
+      display: flex;
+      gap: 32px;
+    }
+
+    .login-stat {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .login-stat .val {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--secondary);
+      line-height: 1;
+    }
+
+    .login-stat .lbl {
+      font-size: 12px;
+      color: rgba(255,255,255,0.45);
+      margin-top: 4px;
+    }
+
+    .login-features {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-bottom: 48px;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: rgba(255,255,255,0.7);
+      font-size: 14px;
+    }
+
+    .feature-item .feat-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      flex-shrink: 0;
+    }
+
+    /* ---- Right Panel ---- */
+    .login-right {
+      flex: 1;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 60px;
+      position: relative;
+      overflow-y: auto;
+    }
+
+    .login-form-wrap {
+      width: 100%;
+      max-width: 400px;
+      animation: slideUp 0.6s ease both;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .form-heading {
+      margin-bottom: 32px;
+    }
+
+    .form-heading h1 {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 6px;
+    }
+
+    .form-heading p {
+      font-size: 13.5px;
+      color: #6b7a99;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+      position: relative;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      color: #6b7a99;
+      margin-bottom: 7px;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+
+    .input-wrap {
+      position: relative;
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 14px; top: 50%;
+      transform: translateY(-50%);
+      font-size: 16px;
+      pointer-events: none;
+      color: #9aa5be;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 12px 14px 12px 42px;
+      background: #f5f7fb;
+      border: 1.5px solid #e2e8f4;
+      border-radius: 10px;
+      font-size: 14px;
+      font-family: 'Inter', sans-serif;
+      color: var(--primary);
+      outline: none;
+      transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+      border-color: var(--accent);
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(30,90,173,0.1);
+    }
+
+    .form-control::placeholder { color: #b0bbd6; }
+
+    .password-toggle {
+      position: absolute;
+      right: 12px; top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      color: #9aa5be;
+      transition: color 0.2s;
+      padding: 4px;
+    }
+
+    .password-toggle:hover { color: var(--accent); }
+
+    .form-options {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 13px;
+      margin-bottom: 24px;
+    }
+
+    .remember-wrap {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      cursor: pointer;
+    }
+
+    .remember-wrap input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+
+    .remember-wrap span {
+      color: #6b7a99;
+      font-size: 13px;
+    }
+
+    .forgot-link {
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+
+    .forgot-link:hover { opacity: 0.7; }
+
+    .login-btn {
+      width: 100%;
+      padding: 13px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 700;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: all 0.3s ease;
+      box-shadow: 0 6px 24px rgba(10,22,40,0.3);
+    }
+
+    .login-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 30px rgba(10,22,40,0.4);
+    }
+
+    .login-btn:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .spinner {
+      width: 16px; height: 16px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      display: inline-block;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .login-error {
+      background: rgba(231,76,60,0.08);
+      border: 1px solid rgba(231,76,60,0.2);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 13px;
+      color: var(--danger);
+      margin-bottom: 16px;
+      display: none;
+    }
+
+    /* Demo accounts */
+    .demo-section {
+      margin-top: 28px;
+      padding-top: 24px;
+      border-top: 1px solid #e2e8f4;
+    }
+
+    .demo-section h4 {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #9aa5be;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+    }
+
+    .demo-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .demo-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 12px;
+      background: #f5f7fb;
+      border: 1.5px solid #e2e8f4;
+      border-radius: 8px;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: #1a2035;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .demo-btn:hover {
+      border-color: var(--secondary);
+      background: rgba(201,168,76,0.06);
+      color: #8a6800;
+    }
+
+    .demo-btn .d-icon {
+      font-size: 16px;
+    }
+
+    .login-footer {
+      position: absolute;
+      bottom: 24px;
+      left: 0; right: 0;
+      text-align: center;
+      font-size: 12px;
+      color: #9aa5be;
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .login-left { display: none; }
+      .login-right { padding: 40px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- LEFT PANEL -->
+  <div class="login-left">
+    <div class="login-bg">
+      <div class="orb orb-1"></div>
+      <div class="orb orb-2"></div>
+      <div class="orb orb-3"></div>
+    </div>
+
+    <div class="login-left-content">
+      <!-- Crest -->
+      <div class="school-crest">
+        <div class="crest-icon">🎓</div>
+        <div class="crest-text">
+          <span class="crest-name">Maverick International</span>
+          <span class="crest-sub">School of Excellence</span>
+        </div>
+      </div>
+
+      <!-- Hero -->
+      <div class="login-hero-text">
+        <h2>Empower Your <span>Academic</span> Journey</h2>
+        <p>A unified digital hub for students, teachers, and parents — seamlessly connecting every aspect of school life.</p>
+      </div>
+
+      <!-- Features -->
+      <div class="login-features">
+        <div class="feature-item">
+          <div class="feat-icon">📊</div>
+          <span>Real-time grades, results & academic progress tracking</span>
+        </div>
+        <div class="feature-item">
+          <div class="feat-icon">📅</div>
+          <span>Interactive timetable, events, and scheduled sessions</span>
+        </div>
+        <div class="feature-item">
+          <div class="feat-icon">📢</div>
+          <span>Instant notices and school-wide announcements</span>
+        </div>
+        <div class="feature-item">
+          <div class="feat-icon">🤝</div>
+          <span>Parent-Teacher collaboration & communication tools</span>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="login-stats">
+        <div class="login-stat">
+          <span class="val">2,400+</span>
+          <span class="lbl">Students</span>
+        </div>
+        <div class="login-stat">
+          <span class="val">140+</span>
+          <span class="lbl">Teachers</span>
+        </div>
+        <div class="login-stat">
+          <span class="val">98%</span>
+          <span class="lbl">Pass Rate</span>
+        </div>
+        <div class="login-stat">
+          <span class="val">Est. 2001</span>
+          <span class="lbl">Since</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="login-right">
+    <div class="login-form-wrap">
+      <div class="form-heading">
+        <h1>Welcome Back 👋</h1>
+        <p>Sign in to access your Maverick International portal</p>
+      </div>
+
+      <!-- Error -->
+      <div class="login-error" id="loginError"></div>
+
+      <!-- Form -->
+      <form id="loginForm" novalidate autocomplete="off">
+        <div class="form-group">
+          <label class="form-label" for="loginEmail">Email Address</label>
+          <div class="input-wrap">
+            <span class="input-icon">📧</span>
+            <input type="email" id="loginEmail" class="form-control" placeholder="you@maverick.edu.ng" required />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="loginPassword">Password</label>
+          <div class="input-wrap">
+            <span class="input-icon">🔑</span>
+            <input type="password" id="loginPassword" class="form-control" placeholder="Enter your password" required />
+            <button type="button" class="password-toggle" id="togglePassword">👁️</button>
+          </div>
+        </div>
+
+        <div class="form-options">
+          <label class="remember-wrap">
+            <input type="checkbox" id="rememberMe" />
+            <span>Remember me</span>
+          </label>
+          <a href="#" class="forgot-link">Forgot password?</a>
+        </div>
+
+        <button type="submit" class="login-btn" id="loginBtn">
+          <span>🔐</span>
+          <span>Sign In</span>
+        </button>
+      </form>
+
+      <!-- Demo Section -->
+      <div class="demo-section">
+        <h4>🚀 Quick Demo Access</h4>
+        <div class="demo-grid">
+          <button class="demo-btn" data-demo-role="administrator">
+            <span class="d-icon">🛡️</span>Admin
+          </button>
+          <button class="demo-btn" data-demo-role="teacher">
+            <span class="d-icon">📖</span>Teacher
+          </button>
+          <button class="demo-btn" data-demo-role="student">
+            <span class="d-icon">🎓</span>Student
+          </button>
+          <button class="demo-btn" data-demo-role="parent">
+            <span class="d-icon">👨‍👩‍👧</span>Parent
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="login-footer">
+      © 2025 Maverick International. All rights reserved.
+    </div>
+  </div>
+
+  <script src="js/main.js"></script>
+  <script src="js/auth.js"></script>
+</body>
+</html>
