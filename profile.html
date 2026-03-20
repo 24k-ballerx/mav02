@@ -231,6 +231,69 @@
             text-align: right;
             color: var(--text-primary);
         }
+        /* ============================================
+           PROFILE — Responsive (5-Tier)
+           ============================================ */
+
+        /* LG <= 1100px: 3-col → 2-col */
+        @media (max-width: 1100px) {
+            .grid-3.profile-content-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        /* MD <= 768px: 2-col → 1-col, header stacks */
+        @media (max-width: 768px) {
+            .profile-header-info {
+                padding: 8px 20px 0 140px;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+                margin-bottom: 20px;
+            }
+            .info-grid { grid-template-columns: 1fr; }
+            .info-field[style*="grid-column:span 2"],
+            .info-field[style*="grid-column: span 2"] {
+                grid-column: span 1 !important;
+            }
+            .stats-profile { grid-template-columns: repeat(3, 1fr); }
+        }
+
+        /* SM <= 640px */
+        @media (max-width: 640px) {
+            .profile-banner { height: 140px; margin-bottom: 68px; }
+            .profile-avatar-wrap { bottom: -52px; left: 20px; }
+            .profile-header-info { padding: 4px 16px 0 130px; }
+            .profile-name { font-size: 22px; }
+        }
+
+        /* XS <= 480px: full stack */
+        @media (max-width: 480px) {
+            .profile-banner { height: 120px; margin-bottom: 60px; }
+            .profile-avatar { width: 88px; height: 88px; font-size: 30px; }
+            .profile-avatar-wrap { bottom: -44px; left: 14px; }
+            .profile-header-info {
+                padding: 6px 12px 0 12px;
+                flex-direction: column;
+                align-items: flex-start;
+                margin-top: 50px;
+                margin-bottom: 16px;
+            }
+            .profile-name { font-size: 20px; }
+            .profile-role { gap: 6px; }
+            .stats-profile { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+            .profile-stat-val { font-size: 18px; }
+            .sub-perf-name { width: 90px; font-size: 12px; }
+            .subject-performance { gap: 10px; }
+        }
+
+        /* XXS <= 360px */
+        @media (max-width: 360px) {
+            .stats-profile { grid-template-columns: 1fr 1fr; }
+            .profile-name { font-size: 18px; }
+            .sub-perf-name { width: 80px; font-size: 11.5px; }
+            .sub-perf-score { font-size: 12px; width: 32px; }
+        }
     </style>
 </head>
 

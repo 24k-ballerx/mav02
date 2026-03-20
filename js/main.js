@@ -8,6 +8,8 @@
    ============================================ */
 
 const Portal = {
+  API_BASE: 'http://127.0.0.1:8000/api',
+
   // Initialize portal
   init() {
     this.setupSidebar();
@@ -179,38 +181,106 @@ const Portal = {
     }, duration);
   },
 
-  /* ---- User Session ---- */
+  /* ---- API & User Session ---- */
+  async apiFetch(endpoint, options = {}) {
+    const accessToken = localStorage.getItem('mav_access');
+    
+    // Default headers
+    const headers = {
+      'Content-Type': 'application/json',
+      ...options.headers
+    };
+
+    // Add Authorization header if token exists
+    if (accessToken) {
+      headers['Authorization'] = `Bearer ${accessToken}`;
+    }
+
+    const response = await fetch(`${this.API_BASE}${endpoint}`, {
+      ...options,
+      headers
+    });
+
+    // Handle token expiration (401)
+    if (response.status === 401 && !options._retry) {
+      const refreshed = await this.refreshToken();
+      if (refreshed) {
+        options._retry = true;
+        return this.apiFetch(endpoint, options);
+      } else {
+        this.logout();
+        return null;
+      }
+    }
+
+    return response;
+  },
+
+  async refreshToken() {
+    const refresh = localStorage.getItem('mav_refresh');
+    if (!refresh) return false;
+
+    try {
+      const response = await fetch(`${this.API_BASE}/auth/token/refresh/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ refresh })
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        localStorage.setItem('mav_access', data.access);
+        if (data.refresh) localStorage.setItem('mav_refresh', data.refresh);
+        return true;
+      }
+    } catch (err) {
+      console.error('Token refresh failed:', err);
+    }
+    return false;
+  },
+
   loadUser() {
     const user = this.getUser();
     if (!user) return;
 
     document.querySelectorAll('[data-user-name]').forEach(el => {
-      el.textContent = user.name;
+      el.textContent = user.full_name || user.name;
     });
     document.querySelectorAll('[data-user-role]').forEach(el => {
-      el.textContent = user.role;
+      // Backend uses lowercase roles (admin, teacher, etc.)
+      // Capitalize for display or use the display name if available
+      const role = user.role_display || user.role;
+      el.textContent = role ? role.charAt(0).toUpperCase() + role.slice(1) : 'User';
     });
     document.querySelectorAll('[data-user-initials]').forEach(el => {
-      el.textContent = user.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+      if (user.initials) {
+        el.textContent = user.initials;
+      } else {
+        const name = user.full_name || user.name || 'User';
+        el.textContent = name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+      }
     });
   },
 
   getUser() {
     try {
-      return JSON.parse(localStorage.getItem('mav_user')) || {
-        name: 'Admin User',
-        role: 'Administrator',
-        email: 'admin@maverick.edu.ng'
-      };
+      const userStr = localStorage.getItem('mav_user');
+      return userStr ? JSON.parse(userStr) : null;
     } catch { return null; }
   },
 
-  setUser(userData) {
+  setUser(userData, tokens = null) {
     localStorage.setItem('mav_user', JSON.stringify(userData));
+    if (tokens) {
+      localStorage.setItem('mav_access', tokens.access);
+      localStorage.setItem('mav_refresh', tokens.refresh);
+    }
   },
 
   logout() {
     localStorage.removeItem('mav_user');
+    localStorage.removeItem('mav_access');
+    localStorage.removeItem('mav_refresh');
     window.location.href = 'index.html';
   }
 };

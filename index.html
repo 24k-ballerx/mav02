@@ -442,11 +442,57 @@
       color: #9aa5be;
     }
 
-    /* Responsive */
-    @media (max-width: 900px) {
-      .login-left { display: none; }
-      .login-right { padding: 40px 24px; }
+
+    /* ============================================
+       LOGIN PAGE — Responsive (5-Tier)
+       ============================================ */
+
+    /* LG <= 1024px: slightly narrower left panel */
+    @media (max-width: 1024px) {
+      .login-left { width: 45%; padding: 40px; }
+      .login-hero-text h2 { font-size: 36px; }
     }
+
+    /* MD <= 900px: hide left panel, show form only */
+    @media (max-width: 900px) {
+      body { overflow-y: auto; }
+      .login-left { display: none; }
+      .login-right {
+        padding: 48px 40px;
+        min-height: 100vh;
+      }
+    }
+
+    /* SM <= 640px: reduce right panel padding */
+    @media (max-width: 640px) {
+      .login-right { padding: 36px 24px 60px; }
+      .login-form-wrap { max-width: 100%; }
+      .form-heading h1 { font-size: 24px; }
+      .demo-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    /* XS <= 480px: phone-level compact form */
+    @media (max-width: 480px) {
+      .login-right { padding: 28px 16px 56px; }
+      .form-heading h1 { font-size: 22px; }
+      .form-heading p  { font-size: 13px; }
+      .form-control    { padding: 11px 12px 11px 40px; font-size: 13.5px; }
+      .login-btn       { padding: 12px; font-size: 14px; }
+      .form-options    { font-size: 12.5px; }
+      .demo-grid { gap: 6px; }
+      .demo-btn  { padding: 8px 10px; font-size: 12px; }
+      .login-footer { font-size: 11px; bottom: 16px; }
+    }
+
+    /* XXS <= 360px: very small phones */
+    @media (max-width: 360px) {
+      .login-right { padding: 24px 12px 56px; }
+      .form-heading h1 { font-size: 20px; }
+      .login-btn { font-size: 13.5px; }
+      .demo-grid { grid-template-columns: 1fr; }
+      .demo-btn  { justify-content: center; }
+    }
+
   </style>
 </head>
 <body>

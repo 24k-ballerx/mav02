@@ -4,12 +4,12 @@
  */
 
 const Auth = {
-    /* Demo credentials */
+    /* Demo credentials (matching backend seed_users.py) */
     users: [
-        { id: 'ADM001', name: 'Dr. Emmanuel Okafor', role: 'Administrator', email: 'admin@maverick.edu.ng', password: 'admin123', avatar: 'EO' },
-        { id: 'TCH001', name: 'Mrs. Ngozi Adeleke', role: 'Teacher', email: 'teacher@maverick.edu.ng', password: 'teacher123', avatar: 'NA' },
-        { id: 'STD001', name: 'Chukwuemeka Obi', role: 'Student', email: 'student@maverick.edu.ng', password: 'student123', avatar: 'CO' },
-        { id: 'PAR001', name: 'Alhaji Musa Bello', role: 'Parent', email: 'parent@maverick.edu.ng', password: 'parent123', avatar: 'MB' },
+        { role: 'Administrator', email: 'admin@maverick.edu.ng', password: 'admin123' },
+        { role: 'Teacher',       email: 'teacher@maverick.edu.ng', password: 'teacher123' },
+        { role: 'Student',       email: 'student@maverick.edu.ng', password: 'student123' },
+        { role: 'Parent',        email: 'parent@maverick.edu.ng', password: 'parent123' },
     ],
 
     init() {
@@ -53,11 +53,13 @@ const Auth = {
         });
     },
 
-    handleLogin() {
+    async handleLogin() {
         const email = document.getElementById('loginEmail').value.trim();
         const password = document.getElementById('loginPassword').value;
         const btn = document.getElementById('loginBtn');
         const errorEl = document.getElementById('loginError');
+
+        if (!email || !password) return;
 
         // Show loading
         if (btn) {
@@ -66,24 +68,42 @@ const Auth = {
         }
         if (errorEl) errorEl.style.display = 'none';
 
-        // Simulate network delay
-        setTimeout(() => {
-            const user = this.users.find(u => u.email === email && u.password === password);
+        try {
+            const response = await fetch(`${Portal.API_BASE}/auth/login/`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
 
-            if (user) {
-                Portal.setUser(user);
-                window.location.href = 'dashboard.html';
+            const data = await response.json();
+
+            if (response.ok) {
+                // Backend returns { access, refresh, user: { ... } }
+                Portal.setUser(data.user, { 
+                    access: data.access, 
+                    refresh: data.refresh 
+                });
+                
+                // Success feedback
+                if (btn) btn.innerHTML = '<span>✅</span> Success!';
+                
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 500);
             } else {
-                if (btn) {
-                    btn.disabled = false;
-                    btn.innerHTML = '<span>🔐</span> Sign In';
-                }
-                if (errorEl) {
-                    errorEl.textContent = '❌ Invalid email or password. Try a demo account below.';
-                    errorEl.style.display = 'block';
-                }
+                throw new Error(data.detail || 'Invalid credentials. Please try again.');
             }
-        }, 800);
+        } catch (err) {
+            console.error('Login error:', err);
+            if (btn) {
+                btn.disabled = false;
+                btn.innerHTML = '<span>🔐</span> Sign In';
+            }
+            if (errorEl) {
+                errorEl.textContent = `❌ ${err.message}`;
+                errorEl.style.display = 'block';
+            }
+        }
     },
 
     /* Guard pages that require login */
