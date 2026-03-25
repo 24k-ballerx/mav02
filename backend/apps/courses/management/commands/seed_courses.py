@@ -1,65 +1,68 @@
+import random
 from django.core.management.base import BaseCommand
-from django.contrib.auth import get_user_model
 from apps.courses.models import Course
 
-User = get_user_model()
-
 class Command(BaseCommand):
-    help = 'Seeds the database with initial courses'
+    help = 'Seeds Nigerian curriculum courses'
 
     def handle(self, *args, **kwargs):
-        # Ensure we have a teacher
-        teacher, created = User.objects.get_or_create(
-            email='teacher@maverick.edu.ng',
-            defaults={
-                'first_name': 'Sarah',
-                'last_name': 'Okonkwo',
-                'role': 'teacher',
-                'is_active': True,
-            }
-        )
-        if created:
-            teacher.set_password('teacher123')
-            teacher.save()
-            self.stdout.write(self.style.SUCCESS('Created teacher user'))
-
-        courses_data = [
-            {
-                'code': 'MTH101',
-                'title': 'General Mathematics I',
-                'description': 'Foundational mathematics including algebra and trigonometry.',
-                'department': 'Mathematics',
-                'teacher': teacher
-            },
-            {
-                'code': 'ENG101',
-                'title': 'English Composition',
-                'description': 'Core English language and writing skills.',
-                'department': 'English',
-                'teacher': teacher
-            },
-            {
-                'code': 'CSC201',
-                'title': 'Introduction to Computer Science',
-                'description': 'Basics of computing and programming.',
-                'department': 'Computer Science',
-                'teacher': teacher
-            },
-            {
-                'code': 'PHY201',
-                'title': 'General Physics I',
-                'description': 'Mechanics and properties of matter.',
-                'department': 'Physics',
-                'teacher': teacher
-            }
+        Course.objects.all().delete()
+        
+        jss_subjects = [
+            ("MTH101", "Mathematics", "Mathematics"),
+            ("ENG101", "English Language", "English"),
+            ("BSC101", "Basic Science", "Science"),
+            ("BTE101", "Basic Technology", "Science"),
+            ("SST101", "Social Studies", "Arts"),
+            ("CIV101", "Civic Education", "Arts"),
+            ("CRS101", "C.R.S / I.R.S", "Arts"),
+            ("PHE101", "Physical & Health Education", "Science"),
+            ("BST101", "Business Studies", "Commerce"),
+            ("AGR101", "Agricultural Science", "Science"),
+            ("HEC101", "Home Economics", "Arts"),
+            ("YOR101", "Local Language (Yoruba)", "Arts"),
+            ("FRE101", "French", "Arts"),
+            ("ICT101", "Computer Studies", "Computer Science"),
+        ]
+        
+        ss_core = [
+            ("MTH201", "Mathematics", "Mathematics"),
+            ("ENG201", "English Language", "English"),
+            ("CIV201", "Civic Education", "Arts"),
+            ("DTP201", "Data Processing", "Computer Science"),
+        ]
+        
+        ss_science = [
+            ("BIO201", "Biology", "Biology"),
+            ("CHM201", "Chemistry", "Chemistry"),
+            ("PHY201", "Physics", "Physics"),
+            ("FMT201", "Further Mathematics", "Mathematics"),
+            ("GEO201", "Geography", "Science"),
+        ]
+        
+        ss_arts = [
+            ("LIT201", "Literature in English", "English"),
+            ("GOV201", "Government", "Arts"),
+            ("CRS201", "C.R.S / I.R.S", "Arts"),
+            ("HIS201", "History", "History"),
+        ]
+        
+        ss_commerce = [
+            ("ECO201", "Economics", "Commerce"),
+            ("ACC201", "Financial Accounting", "Commerce"),
+            ("COM201", "Commerce", "Commerce"),
         ]
 
-        for data in courses_data:
-            course, created = Course.objects.get_or_create(
-                code=data['code'],
-                defaults=data
+        all_courses = jss_subjects + ss_core + ss_science + ss_arts + ss_commerce
+        
+        for code, title, dept in all_courses:
+            Course.objects.get_or_create(
+                code=code,
+                defaults={
+                    "title": title,
+                    "department": dept,
+                    "description": f"{title} syllabus for Maverick International School."
+                }
             )
-            if created:
-                self.stdout.write(self.style.SUCCESS(f'Created course: {course.code}'))
-            else:
-                self.stdout.write(self.style.WARNING(f'Course {course.code} already exists'))
+
+        self.stdout.write(self.style.SUCCESS(f'Successfully seeded {len(all_courses)} Nigerian courses.'))

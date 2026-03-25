@@ -300,20 +300,20 @@
                 <div id="tabReport">
                     <!-- Filter -->
                     <div class="result-filter-row">
-                        <select class="form-control" style="width:auto">
-                            <option>2025/2026</option>
-                            <option>2024/2025</option>
+                        <select class="form-control" style="width:auto" id="yearFilter">
+                            <option value="2025/2026">2025/2026</option>
+                            <option value="2024/2025">2024/2025</option>
                         </select>
-                        <select class="form-control" style="width:auto">
-                            <option>Third Term</option>
-                            <option>Second Term</option>
-                            <option>First Term</option>
+                        <select class="form-control" style="width:auto" id="termFilter">
+                            <option value="third">Third Term</option>
+                            <option value="second">Second Term</option>
+                            <option value="first">First Term</option>
                         </select>
                         <div class="search-bar">
                             <span class="search-icon">🔍</span>
-                            <input type="text" placeholder="Search student name or ID..." />
+                            <input type="text" placeholder="Search student name or ID..." id="studentSearch" />
                         </div>
-                        <button class="btn btn-primary btn-sm">Generate</button>
+                        <button class="btn btn-primary btn-sm" onclick="Results.fetchResults()">Generate</button>
                     </div>
 
                     <!-- Sample Report Card -->
@@ -334,19 +334,19 @@
                         <div class="rc-student-info">
                             <div class="rc-info-cell">
                                 <div class="rc-info-label">Student Name</div>
-                                <div class="rc-info-val">Chukwuemeka Obi</div>
+                                <div class="rc-info-val" id="rcStudentName">---</div>
                             </div>
                             <div class="rc-info-cell">
                                 <div class="rc-info-label">Student ID</div>
-                                <div class="rc-info-val">STD001</div>
+                                <div class="rc-info-val" id="rcStudentID">---</div>
                             </div>
                             <div class="rc-info-cell">
                                 <div class="rc-info-label">Class</div>
-                                <div class="rc-info-val">SS 3A</div>
+                                <div class="rc-info-val" id="rcStudentClass">---</div>
                             </div>
                             <div class="rc-info-cell">
-                                <div class="rc-info-label">Position</div>
-                                <div class="rc-info-val" style="color:#c9a84c;">1st / 52</div>
+                                <div class="rc-info-label">Status</div>
+                                <div class="rc-info-val" style="color:#27ae60;">Active</div>
                             </div>
                         </div>
 
@@ -363,163 +363,24 @@
                                         <th>Remarks</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>Mathematics</td>
-                                        <td>28</td>
-                                        <td>70</td>
-                                        <td>
-                                            <div class="score-bar">
-                                                <div class="score-bar-track">
-                                                    <div class="score-bar-fill"
-                                                        style="width:98%; background:linear-gradient(90deg,#1e5aad,#27ae60)">
-                                                    </div>
-                                                </div><span class="score-bar-val">98</span>
-                                            </div>
-                                        </td>
-                                        <td><span class="badge grade-A">A1</span></td>
-                                        <td>Excellent</td>
-                                    </tr>
-                                    <tr>
-                                        <td>2</td>
-                                        <td>English Language</td>
-                                        <td>25</td>
-                                        <td>63</td>
-                                        <td>
-                                            <div class="score-bar">
-                                                <div class="score-bar-track">
-                                                    <div class="score-bar-fill"
-                                                        style="width:88%; background:linear-gradient(90deg,#1e5aad,#2870d4)">
-                                                    </div>
-                                                </div><span class="score-bar-val">88</span>
-                                            </div>
-                                        </td>
-                                        <td><span class="badge grade-A">A2</span></td>
-                                        <td>Very Good</td>
-                                    </tr>
-                                    <tr>
-                                        <td>3</td>
-                                        <td>Biology</td>
-                                        <td>27</td>
-                                        <td>65</td>
-                                        <td>
-                                            <div class="score-bar">
-                                                <div class="score-bar-track">
-                                                    <div class="score-bar-fill"
-                                                        style="width:92%; background:linear-gradient(90deg,#1e5aad,#27ae60)">
-                                                    </div>
-                                                </div><span class="score-bar-val">92</span>
-                                            </div>
-                                        </td>
-                                        <td><span class="badge grade-A">A1</span></td>
-                                        <td>Excellent</td>
-                                    </tr>
-                                    <tr>
-                                        <td>4</td>
-                                        <td>Chemistry</td>
-                                        <td>23</td>
-                                        <td>59</td>
-                                        <td>
-                                            <div class="score-bar">
-                                                <div class="score-bar-track">
-                                                    <div class="score-bar-fill"
-                                                        style="width:82%; background:linear-gradient(90deg,#1e5aad,#2870d4)">
-                                                    </div>
-                                                </div><span class="score-bar-val">82</span>
-                                            </div>
-                                        </td>
-                                        <td><span class="badge grade-A">A2</span></td>
-                                        <td>Very Good</td>
-                                    </tr>
-                                    <tr>
-                                        <td>5</td>
-                                        <td>Physics</td>
-                                        <td>26</td>
-                                        <td>68</td>
-                                        <td>
-                                            <div class="score-bar">
-                                                <div class="score-bar-track">
-                                                    <div class="score-bar-fill"
-                                                        style="width:94%; background:linear-gradient(90deg,#1e5aad,#27ae60)">
-                                                    </div>
-                                                </div><span class="score-bar-val">94</span>
-                                            </div>
-                                        </td>
-                                        <td><span class="badge grade-A">A1</span></td>
-                                        <td>Excellent</td>
-                                    </tr>
-                                    <tr>
-                                        <td>6</td>
-                                        <td>Further Maths</td>
-                                        <td>24</td>
-                                        <td>60</td>
-                                        <td>
-                                            <div class="score-bar">
-                                                <div class="score-bar-track">
-                                                    <div class="score-bar-fill"
-                                                        style="width:84%; background:linear-gradient(90deg,#1e5aad,#2870d4)">
-                                                    </div>
-                                                </div><span class="score-bar-val">84</span>
-                                            </div>
-                                        </td>
-                                        <td><span class="badge grade-A">A2</span></td>
-                                        <td>Very Good</td>
-                                    </tr>
-                                    <tr>
-                                        <td>7</td>
-                                        <td>Civic Education</td>
-                                        <td>22</td>
-                                        <td>55</td>
-                                        <td>
-                                            <div class="score-bar">
-                                                <div class="score-bar-track">
-                                                    <div class="score-bar-fill"
-                                                        style="width:77%; background:linear-gradient(90deg,#c9a84c,#e8c96d)">
-                                                    </div>
-                                                </div><span class="score-bar-val">77</span>
-                                            </div>
-                                        </td>
-                                        <td><span class="badge grade-B">B2</span></td>
-                                        <td>Good</td>
-                                    </tr>
-                                    <tr>
-                                        <td>8</td>
-                                        <td>C.R.S</td>
-                                        <td>20</td>
-                                        <td>52</td>
-                                        <td>
-                                            <div class="score-bar">
-                                                <div class="score-bar-track">
-                                                    <div class="score-bar-fill"
-                                                        style="width:72%; background:linear-gradient(90deg,#c9a84c,#e8c96d)">
-                                                    </div>
-                                                </div><span class="score-bar-val">72</span>
-                                            </div>
-                                        </td>
-                                        <td><span class="badge grade-B">B3</span></td>
-                                        <td>Good</td>
-                                    </tr>
+                                <tbody id="resultsTableBody">
+                                    <!-- Results will be loaded here -->
                                 </tbody>
                             </table>
                         </div>
 
-                        <div class="rc-summary">
+                        <div class="rc-summary" id="reportCardSummary">
                             <div class="rc-summary-item">
                                 <div class="rc-summary-label">Total Score</div>
-                                <div class="rc-summary-val">689 / 800</div>
+                                <div class="rc-summary-val" id="rcTotalScore">0 / 0</div>
                             </div>
                             <div class="rc-summary-item">
                                 <div class="rc-summary-label">Average</div>
-                                <div class="rc-summary-val" style="color:#27ae60;">86.1%</div>
+                                <div class="rc-summary-val" style="color:#27ae60;" id="rcAverage">0%</div>
                             </div>
                             <div class="rc-summary-item">
-                                <div class="rc-summary-label">Position</div>
-                                <div class="rc-summary-val" style="color:#c9a84c;">1st / 52</div>
-                            </div>
-                            <div class="rc-summary-item">
-                                <div class="rc-summary-label">Promoted</div>
-                                <div class="rc-summary-val">✅ Yes</div>
+                                <div class="rc-summary-label">Status</div>
+                                <div class="rc-summary-val">✅ Passed</div>
                             </div>
                             <div style="margin-left: auto; display:flex; gap:10px; align-items:center;">
                                 <button class="btn btn-outline btn-sm">📤 Share</button>
@@ -566,8 +427,13 @@
                                         <th>Position</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr>
+                                <tbody id="classResultsTableBody">
+                                    <tr id="classLoadingRow">
+                                        <td colspan="7" style="text-align: center; padding: 40px;">
+                                            <div class="spinner" style="border-top-color: var(--primary); margin: 0 auto;"></div>
+                                            <p style="margin-top: 10px; color: var(--text-muted);">Loading class results...</p>
+                                        </td>
+                                    </tr>
                                         <td>1</td>
                                         <td>Chukwuemeka Obi</td>
                                         <td>28</td>
@@ -575,69 +441,6 @@
                                         <td><strong>98</strong></td>
                                         <td><span class="badge grade-A">A1</span></td>
                                         <td>🥇 1st</td>
-                                    </tr>
-                                    <tr>
-                                        <td>2</td>
-                                        <td>Amina Ibrahim</td>
-                                        <td>26</td>
-                                        <td>68</td>
-                                        <td><strong>94</strong></td>
-                                        <td><span class="badge grade-A">A1</span></td>
-                                        <td>🥈 2nd</td>
-                                    </tr>
-                                    <tr>
-                                        <td>3</td>
-                                        <td>Abiodun Eze</td>
-                                        <td>25</td>
-                                        <td>64</td>
-                                        <td><strong>89</strong></td>
-                                        <td><span class="badge grade-A">A2</span></td>
-                                        <td>🥉 3rd</td>
-                                    </tr>
-                                    <tr>
-                                        <td>4</td>
-                                        <td>Kelechi Onyeka</td>
-                                        <td>22</td>
-                                        <td>62</td>
-                                        <td><strong>84</strong></td>
-                                        <td><span class="badge grade-A">A2</span></td>
-                                        <td>4th</td>
-                                    </tr>
-                                    <tr>
-                                        <td>5</td>
-                                        <td>Zara Mohammed</td>
-                                        <td>20</td>
-                                        <td>58</td>
-                                        <td><strong>78</strong></td>
-                                        <td><span class="badge grade-B">B2</span></td>
-                                        <td>5th</td>
-                                    </tr>
-                                    <tr>
-                                        <td>6</td>
-                                        <td>Fatima Okonkwo</td>
-                                        <td>18</td>
-                                        <td>52</td>
-                                        <td><strong>70</strong></td>
-                                        <td><span class="badge grade-B">B3</span></td>
-                                        <td>6th</td>
-                                    </tr>
-                                    <tr>
-                                        <td>7</td>
-                                        <td>Tunde Adesanya</td>
-                                        <td>16</td>
-                                        <td>42</td>
-                                        <td><strong>58</strong></td>
-                                        <td><span class="badge grade-C">C4</span></td>
-                                        <td>7th</td>
-                                    </tr>
-                                    <tr>
-                                        <td>8</td>
-                                        <td>Blessing Pius</td>
-                                        <td>12</td>
-                                        <td>30</td>
-                                        <td><strong>42</strong></td>
-                                        <td><span class="badge grade-D">D7</span></td>
-                                        <td>8th</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -652,38 +455,38 @@
                             <div class="card-title">⬆️ Upload Results</div>
                         </div>
                         <div class="card-body">
-                            <div class="form-group"><label class="form-label">Class</label><select class="form-control">
+                            <div class="form-group"><label class="form-label">Class</label><select class="form-control" id="upClass">
                                     <option>SS 3A</option>
                                     <option>SS 2A</option>
                                     <option>JSS 3A</option>
                                 </select></div>
                             <div class="form-group"><label class="form-label">Subject</label><select
-                                    class="form-control">
+                                    class="form-control" id="upSubject">
                                     <option>Mathematics</option>
                                     <option>English Language</option>
                                     <option>Biology</option>
                                 </select></div>
-                            <div class="form-group"><label class="form-label">Term</label><select class="form-control">
-                                    <option>Third Term</option>
-                                    <option>Second Term</option>
+                            <div class="form-group"><label class="form-label">Term</label><select class="form-control" id="upTerm">
+                                    <option value="third">Third Term</option>
+                                    <option value="second">Second Term</option>
                                 </select></div>
                             <div class="form-group">
-                                <label class="form-label">Upload Scores (CSV / Excel)</label>
-                                <div style="border: 2px dashed var(--border); border-radius: var(--radius-md); padding: 32px; text-align:center; cursor:pointer; transition:var(--transition);"
+                                <label class="form-label">Upload Scores (CSV)</label>
+                                <div id="dropZone" style="border: 2px dashed var(--border); border-radius: var(--radius-md); padding: 32px; text-align:center; cursor:pointer; transition:var(--transition);"
                                     onmouseenter="this.style.borderColor='#c9a84c'"
-                                    onmouseleave="this.style.borderColor='var(--border)'">
+                                    onmouseleave="this.style.borderColor='var(--border)'"
+                                    onclick="document.getElementById('upFile').click()">
                                     <div style="font-size:32px; margin-bottom:8px;">📂</div>
-                                    <p style="font-size:14px; font-weight:600; color:var(--text-primary);">Click to
+                                    <p style="font-size:14px; font-weight:600; color:var(--text-primary);" id="dropZoneText">Click to
                                         choose file or drag & drop</p>
-                                    <p style="font-size:12px; color:var(--text-muted); margin-top:4px;">Supports .csv,
-                                        .xlsx — Max 5MB</p>
-                                    <input type="file" style="display:none;" accept=".csv,.xlsx" />
+                                    <p style="font-size:12px; color:var(--text-muted); margin-top:4px;">Supports .csv — Max 5MB</p>
+                                    <input type="file" id="upFile" style="display:none;" accept=".csv" onchange="Results.handleFileSelect(event)" />
                                 </div>
                             </div>
                             <div style="display:flex; gap:10px; justify-content:flex-end;">
-                                <button class="btn btn-outline">Download Template</button>
-                                <button class="btn btn-primary"
-                                    onclick="Portal.showToast('Results uploaded successfully!', 'success')">⬆️ Upload
+                                <a href="sample_scores.csv" download class="btn btn-outline" style="text-decoration:none; display:flex; align-items:center;">Download Template</a>
+                                <button class="btn btn-primary" id="upBtn"
+                                    onclick="Results.uploadScores()">⬆️ Upload
                                     Now</button>
                             </div>
                         </div>
@@ -699,6 +502,7 @@
     </div>
 
     <script src="js/main.js"></script>
+    <script src="js/results.js"></script>
     <script>
         function showTab(tab) {
             document.getElementById('tabReport').style.display = tab === 'report' ? '' : 'none';

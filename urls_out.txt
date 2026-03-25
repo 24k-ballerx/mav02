@@ -1,0 +1,7 @@
+<URLResolver <URLPattern list> (admin:admin) 'admin/'>
+<URLResolver <module 'apps.accounts.urls' from 'C:\\Users\\USER\\mav02\\backend\\apps\\accounts\\urls.py'> (None:None) 'api/auth/'>
+<URLResolver <module 'apps.students.urls' from 'C:\\Users\\USER\\mav02\\backend\\apps\\students\\urls.py'> (None:None) 'api/students/'>
+<URLResolver <module 'apps.courses.urls' from 'C:\\Users\\USER\\mav02\\backend\\apps\\courses\\urls.py'> (None:None) 'api/courses/'>
+<URLResolver <module 'apps.results.urls' from 'C:\\Users\\USER\\mav02\\backend\\apps\\results\\urls.py'> (None:None) 'api/results/'>
+<URLResolver <module 'apps.notices.urls' from 'C:\\Users\\USER\\mav02\\backend\\apps\\notices\\urls.py'> (None:None) 'api/notices/'>
+<URLPattern '^media/(?P<path>.*)$'>

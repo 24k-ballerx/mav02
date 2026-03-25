@@ -6,6 +6,8 @@
 const Courses = {
     init() {
         this.fetchCourses();
+        this.setupSearch();
+        this.setupAddForm();
     },
 
     async fetchCourses(query = '') {
@@ -104,6 +106,80 @@ const Courses = {
             'Commerce': 'cc-commerce'
         };
         return map[dept] || 'cc-math';
+    },
+
+    setupSearch() {
+        const searchInput = document.getElementById('courseSearch');
+        let debounceTimer;
+
+        if (searchInput) {
+            searchInput.addEventListener('input', (e) => {
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(() => {
+                    const query = e.target.value.trim();
+                    const queryString = query ? `?search=${encodeURIComponent(query)}` : '';
+                    this.fetchCourses(queryString);
+                }, 400);
+            });
+        }
+    },
+
+    openAddModal() {
+        const modal = document.getElementById('addCourseModal');
+        if (modal) modal.style.display = 'flex';
+    },
+
+    closeAddModal() {
+        const modal = document.getElementById('addCourseModal');
+        if (modal) {
+            modal.style.display = 'none';
+            document.getElementById('addCourseForm').reset();
+        }
+    },
+
+    setupAddForm() {
+        const form = document.getElementById('addCourseForm');
+        if (!form) return;
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('acSubmitBtn');
+            const originalText = btn.textContent;
+            
+            const payload = {
+                code: document.getElementById('acCode').value.trim(),
+                title: document.getElementById('acTitle').value.trim(),
+                department: document.getElementById('acDept').value,
+                description: document.getElementById('acDesc').value.trim()
+            };
+
+            try {
+                btn.disabled = true;
+                btn.textContent = 'Saving...';
+
+                const response = await Portal.apiFetch('/courses/', {
+                    method: 'POST',
+                    body: JSON.stringify(payload)
+                });
+
+                if (response.ok) {
+                    Portal.showToast('Course added successfully!', 'success');
+                    this.closeAddModal();
+                    this.fetchCourses(); // Refresh list
+                } else {
+                    const errorData = await response.json();
+                    let errMsg = 'Failed to add course.';
+                    if (errorData.code) errMsg += ` ${errorData.code[0]}`;
+                    Portal.showToast(errMsg, 'danger');
+                }
+            } catch (err) {
+                console.error(err);
+                Portal.showToast('Network error while saving course.', 'danger');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = originalText;
+            }
+        });
     }
 };
 

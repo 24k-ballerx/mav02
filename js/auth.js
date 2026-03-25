@@ -78,6 +78,9 @@ const Auth = {
             const data = await response.json();
 
             if (response.ok) {
+                // Clear any existing session data to prevent corruption
+                localStorage.clear();
+
                 // Backend returns { access, refresh, user: { ... } }
                 Portal.setUser(data.user, { 
                     access: data.access, 

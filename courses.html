@@ -238,9 +238,9 @@
                     <div style="display:flex; gap:10px;">
                         <div class="search-bar">
                             <span class="search-icon">🔍</span>
-                            <input type="text" placeholder="Search courses..." />
+                            <input type="text" id="courseSearch" placeholder="Search courses..." />
                         </div>
-                        <button class="btn btn-gold">+ Add Course</button>
+                        <button class="btn btn-gold" id="btnAddCourse" onclick="Courses.openAddModal()">+ Add Course</button>
                     </div>
                 </div>
 
@@ -254,7 +254,52 @@
 
                 </div>
 
+                <!-- Add Course Modal -->
+                <div id="addCourseModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center; backdrop-filter:blur(4px);">
+                    <div class="card animate-fadeInUp" style="width:100%; max-width:500px; max-height:90vh; overflow-y:auto;">
+                        <div class="card-header" style="display:flex; justify-content:space-between; align-items:center;">
+                            <h3 class="card-title">Add New Course</h3>
+                            <button onclick="Courses.closeAddModal()" style="background:none; border:none; font-size:20px; cursor:pointer;">&times;</button>
+                        </div>
+                        <div class="card-body">
+                            <form id="addCourseForm">
+                                <div class="form-group">
+                                    <label class="form-label">Course Code</label>
+                                    <input type="text" id="acCode" class="form-control" placeholder="e.g. MTH101" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Course Title</label>
+                                    <input type="text" id="acTitle" class="form-control" placeholder="e.g. General Mathematics" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Department</label>
+                                    <select id="acDept" class="form-control" required>
+                                        <option value="">Select Department</option>
+                                        <option value="Mathematics">Mathematics</option>
+                                        <option value="English">English</option>
+                                        <option value="Science">Science</option>
+                                        <option value="Physics">Physics</option>
+                                        <option value="Chemistry">Chemistry</option>
+                                        <option value="Biology">Biology</option>
+                                        <option value="History">History</option>
+                                        <option value="Arts">Arts</option>
+                                        <option value="Commerce">Commerce</option>
+                                        <option value="Computer Science">Computer Science</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Description (Optional)</label>
+                                    <textarea id="acDesc" class="form-control" rows="3" placeholder="Brief course description..."></textarea>
+                                </div>
+                                <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:20px;">
+                                    <button type="button" class="btn btn-outline" onclick="Courses.closeAddModal()">Cancel</button>
+                                    <button type="submit" class="btn btn-primary" id="acSubmitBtn">Save Course</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
+
             </main>
             <footer class="page-footer">
                 <span>© 2025 <strong>Maverick International School</strong></span>

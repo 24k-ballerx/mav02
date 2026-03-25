@@ -6,6 +6,10 @@ class CourseListView(generics.ListCreateAPIView):
     queryset = Course.objects.all().order_by('code')
     serializer_class = CourseSerializer
     permission_classes = [permissions.IsAuthenticated]
+    
+    from rest_framework import filters
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['title', 'code', 'department']
 
     def get_queryset(self):
         queryset = super().get_queryset()
