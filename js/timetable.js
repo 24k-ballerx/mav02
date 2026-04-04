@@ -44,28 +44,19 @@ const Timetable = {
         const tbody = document.getElementById('timetableBody');
         if (!tbody) return;
 
-        // Group by period (1-7)
+        // Group by period (1-10)
+        const maxPeriod = Math.max(...entries.map(e => e.period), 8);
         const periods = {};
-        for(let i=1; i<=7; i++) {
+        for(let i=1; i<=maxPeriod; i++) {
             periods[i] = []; // index 0=Mon, 4=Fri
             for(let d=0; d<5; d++) periods[i].push(null);
         }
 
-        // Add typical start times for mapping
-        const timeMap = {
-            1: '8:00 – 8:40',
-            2: '8:40 – 9:20',
-            3: '9:20 – 10:00',
-            4: '10:20 – 11:00',
-            5: '11:00 – 11:40',
-            6: '12:20 – 1:00',
-            7: '1:00 – 1:40'
-        };
-
+        const timeMap = {};
         entries.forEach(e => {
             if (periods[e.period]) {
                 periods[e.period][e.day_of_week] = e;
-                if(e.start_time) {
+                if(e.start_time && !timeMap[e.period]) {
                     const start = e.start_time.substring(0,5);
                     const end = e.end_time.substring(0,5);
                     timeMap[e.period] = `${start} – ${end}`;
@@ -74,25 +65,25 @@ const Timetable = {
         });
 
         let html = '';
-        const today = new Date().getDay() - 1; // 0=Mon
+        const today = new Date().getDay() - 1; // 0=Mon, 4=Fri
 
-        // Helper to generate a cell
         const genCell = (entry, dayIndex) => {
             const isToday = dayIndex === today ? 'today-col' : '';
             if (!entry) {
                 return `<td class="${isToday}"><div class="tt-cell" style="align-items:center;opacity:0.5">-</div></td>`;
             }
 
-            const dept = entry.course_details ? entry.course_details.department : '';
+            const details = entry.course_details || {};
+            const dept = details.department || '';
             const colorClass = this.getColorClass(dept);
-            const teacherName = entry.course_details && entry.course_details.teacher_details ? 
-                `Mr/Mrs. ${entry.course_details.teacher_details.last_name}` : 'Staff';
+            const teacherName = details.teacher_details ? 
+                `Mr/Mrs. ${details.teacher_details.last_name}` : 'Staff';
 
             return `
                 <td class="${isToday}">
                     <div class="tt-cell">
                         <div class="tt-lesson ${colorClass}">
-                            <div class="tt-lesson-name">${entry.course_details ? entry.course_details.title : entry.course}</div>
+                            <div class="tt-lesson-name">${details.title || entry.course}</div>
                             <div class="tt-lesson-teacher">${teacherName}</div>
                             <div class="tt-lesson-room">${entry.room}</div>
                         </div>
@@ -101,43 +92,36 @@ const Timetable = {
             `;
         };
 
-        for(let p=1; p<=3; p++) {
-            html += `<tr><td><div class="tt-time">${timeMap[p]}<span>Period ${p}</span></div></td>`;
+        for(let p=1; p<=maxPeriod; p++) {
+            const timeRange = timeMap[p] || '--:-- – --:--';
+            html += `<tr><td><div class="tt-time">${timeRange}<span>Period ${p}</span></div></td>`;
             for(let d=0; d<5; d++) html += genCell(periods[p][d], d);
             html += `</tr>`;
-        }
 
-        html += `<tr class="tt-break"><td colspan="6"><div class="tt-break-content">☕ Short Break — 10:00 to 10:20</div></td></tr>`;
-
-        for(let p=4; p<=5; p++) {
-            html += `<tr><td><div class="tt-time">${timeMap[p]}<span>Period ${p}</span></div></td>`;
-            for(let d=0; d<5; d++) html += genCell(periods[p][d], d);
-            html += `</tr>`;
-        }
-
-        html += `<tr class="tt-break"><td colspan="6"><div class="tt-break-content">🍽️ Lunch Break — 11:40 to 12:20 PM</div></td></tr>`;
-
-        for(let p=6; p<=7; p++) {
-            html += `<tr><td><div class="tt-time">${timeMap[p]}<span>Period ${p}</span></div></td>`;
-            for(let d=0; d<5; d++) html += genCell(periods[p][d], d);
-            html += `</tr>`;
+            // Nigerian Break Structure
+            if (p === 3) {
+                html += `<tr class="tt-break"><td colspan="6"><div class="tt-break-content">☕ Short Break — 10:30 to 10:50</div></td></tr>`;
+            } else if (p === 6) {
+                html += `<tr class="tt-break"><td colspan="6"><div class="tt-break-content">🍽️ Long Break (Lunch) — 12:50 to 1:30 PM</div></td></tr>`;
+            }
         }
 
         tbody.innerHTML = html;
+        console.log(`Rendered ${maxPeriod} periods for ${this.currentClass}`);
     },
 
     getColorClass(dept) {
         const map = {
             'Mathematics': 's-math',
             'English': 's-eng',
-            'Computer Science': 's-civic',
-            'Science': 's-phy',
+            'Science': 's-bio',
             'Physics': 's-phy',
             'Chemistry': 's-chem',
             'Biology': 's-bio',
-            'History': 's-lit',
             'Arts': 's-eng',
-            'Commerce': 's-crs'
+            'History': 's-lit',
+            'Commerce': 's-crs',
+            'Computer Science': 's-civic'
         };
         return map[dept] || 's-math';
     }

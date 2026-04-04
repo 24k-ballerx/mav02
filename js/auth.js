@@ -78,14 +78,25 @@ const Auth = {
             const data = await response.json();
 
             if (response.ok) {
-                // Clear any existing session data to prevent corruption
-                localStorage.clear();
+                console.log("Login successful, saving session...");
+                
+                // Targeted removal instead of clear() to be safer
+                localStorage.removeItem('mav_user');
+                localStorage.removeItem('mav_access');
+                localStorage.removeItem('mav_refresh');
 
                 // Backend returns { access, refresh, user: { ... } }
+                if (!data.user) {
+                    console.error("Login response missing user object:", data);
+                    throw new Error("Invalid response from server (missing user data).");
+                }
+
                 Portal.setUser(data.user, { 
                     access: data.access, 
                     refresh: data.refresh 
                 });
+                
+                console.log("Session saved. Redirecting to dashboard...");
                 
                 // Success feedback
                 if (btn) btn.innerHTML = '<span>✅</span> Success!';

@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 from .models import Result
 from .serializers import ResultSerializer
 from apps.courses.models import Course
-from apps.accounts.models import Student
+from apps.accounts.models import User
 
 class ResultUploadView(APIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -43,7 +43,7 @@ class ResultUploadView(APIView):
             if not student_id:
                 continue
                 
-            student = Student.objects.filter(student_id__iexact=student_id).first()
+            student = User.objects.filter(student_id__iexact=student_id).first()
             if not student:
                 errors.append(f"Student ID {student_id} not found.")
                 continue

@@ -214,10 +214,16 @@ const Results = {
         btn.disabled = true;
 
         try {
-            const token = localStorage.getItem('portal_token') || 'demo-token';
-            const headers = { 'Authorization': `Token ${token}` };
+            // Using mav_access and Bearer to match JWT backend
+            const token = localStorage.getItem('mav_access');
+            if (!token) throw new Error('You must be logged in to upload results.');
+
+            const headers = { 
+                'Authorization': `Bearer ${token}`
+                // Note: Content-Type is NOT set for FormData to let browser add boundary
+            };
             
-            const response = await fetch('/api/results/upload/', {
+            const response = await fetch(`${Portal.API_BASE}/results/upload/`, {
                 method: 'POST',
                 headers: headers,
                 body: formData
@@ -240,7 +246,9 @@ const Results = {
             document.getElementById('dropZoneText').style.color = 'var(--text-primary)';
             
             // Switch to class results to view uploaded data
-            setTimeout(() => { showTab('table'); }, 1500);
+            setTimeout(() => { 
+                if (typeof showTab === 'function') showTab('table'); 
+            }, 1500);
             
         } catch (err) {
             console.error('Upload Error:', err);

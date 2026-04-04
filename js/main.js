@@ -12,12 +12,22 @@ const Portal = {
 
   // Initialize portal
   init() {
+    console.log("Portal initializing...");
     this.setupSidebar();
     this.setupDropdowns();
     this.setupClock();
     this.setupAnimations();
     this.setupActiveNav();
     this.setupToasts();
+    
+    // Auto-redirect if already logged in on index.html
+    const isLoginPage = window.location.pathname.endsWith('index.html') || window.location.pathname.endsWith('/');
+    if (isLoginPage && this.getUser()) {
+      console.log("User already logged in, redirecting to dashboard...");
+      window.location.href = 'dashboard.html';
+      return;
+    }
+
     this.loadUser();
   },
 
@@ -241,24 +251,30 @@ const Portal = {
 
   loadUser() {
     const user = this.getUser();
+    console.log("Loading user session:", user ? user.email : "No session found");
     if (!user) return;
 
     document.querySelectorAll('[data-user-name]').forEach(el => {
-      el.textContent = user.full_name || user.name;
+      el.textContent = user.full_name || user.name || (user.first_name ? `${user.first_name} ${user.last_name}` : 'User');
     });
+    
     document.querySelectorAll('[data-user-role]').forEach(el => {
-      // Backend uses lowercase roles (admin, teacher, etc.)
-      // Capitalize for display or use the display name if available
       const role = user.role_display || user.role;
       el.textContent = role ? role.charAt(0).toUpperCase() + role.slice(1) : 'User';
     });
+    
     document.querySelectorAll('[data-user-initials]').forEach(el => {
       if (user.initials) {
         el.textContent = user.initials;
       } else {
-        const name = user.full_name || user.name || 'User';
+        const name = user.full_name || user.name || (user.first_name ? `${user.first_name} ${user.last_name}` : 'User');
         el.textContent = name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
       }
+    });
+
+    // Update avatar if element exists
+    document.querySelectorAll('[data-user-avatar]').forEach(el => {
+      if (user.avatar_url) el.src = user.avatar_url;
     });
   },
 
