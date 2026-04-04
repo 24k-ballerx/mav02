@@ -8,7 +8,9 @@
    ============================================ */
 
 const Portal = {
-  API_BASE: 'http://127.0.0.1:8000/api',
+  API_BASE: window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost' 
+    ? 'http://127.0.0.1:8000/api' 
+    : 'https://your-backend-api.onrender.com/api',
 
   // Initialize portal
   init() {
