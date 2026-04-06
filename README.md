@@ -32,6 +32,24 @@ The Portal UI will be available at **http://127.0.0.1:5500**.
 - **Login**: [http://127.0.0.1:5500/index.html](http://127.0.0.1:5500/index.html)
 - **Admin**: [http://127.0.0.1:8000/admin/](http://127.0.0.1:8000/admin/) (Email: `admin@maverick.edu.ng` / Pass: `admin123`)
 
+## 🐘 PostgreSQL Migration
+This project already supports PostgreSQL via `DATABASE_URL` in the backend environment.
+1. Install PostgreSQL locally or use a hosted database.
+2. Create a database and user, for example:
+   ```powershell
+   CREATE DATABASE mav02;
+   CREATE USER mav02_user WITH PASSWORD 'securepassword';
+   GRANT ALL PRIVILEGES ON DATABASE mav02 TO mav02_user;
+   ```
+3. Set `DATABASE_URL` in `backend\.env` or your host environment:
+   ```text
+   DATABASE_URL=postgres://mav02_user:securepassword@localhost:5432/mav02
+   ```
+4. Run migrations from the `backend` folder:
+   ```powershell
+   python manage.py migrate
+   ```
+
 ---
 
 ## 🛠 Key Commands

@@ -12,6 +12,13 @@ class ResultUploadView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
+        # ROLE SECURITY CHECK
+        if request.user.role not in ['admin', 'teacher']:
+            return Response(
+                {"error": "Unauthorized. Only administrators and teachers can upload results."},
+                status=status.HTTP_403_FORBIDDEN
+            )
+
         file = request.FILES.get('file')
         target_class = request.data.get('class')
         subject_title = request.data.get('subject')
