@@ -11,7 +11,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = config('SECRET_KEY', default='django-insecure-change-me-for-production')
 DEBUG = config('DEBUG', default=False, cast=bool)
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ["mav02.onrender.com"]
 APPEND_SLASH = False
 print("ALLOWED_HOSTS ACTIVE:", ALLOWED_HOSTS)
 
@@ -56,7 +56,7 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR.parent],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -96,7 +96,8 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 WHITENOISE_INDEX_FILE = True
 
 STATICFILES_DIRS = [
-    BASE_DIR.parent,
+    ('css', BASE_DIR.parent / 'css'),
+    ('js', BASE_DIR.parent / 'js'),
 ]
 
 MEDIA_URL = '/media/'
