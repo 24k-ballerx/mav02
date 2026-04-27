@@ -14,7 +14,7 @@ class NoticeListView(generics.ListCreateAPIView):
 
     def get_permissions(self):
         if self.request.method == 'POST':
-            return [permissions.IsAuthenticated(), permissions.BasePermission()] # Simple for now
+            return [permissions.IsAuthenticated(), permissions.IsAdminUser()] # Only staff/admin can post
         return [permissions.AllowAny()]
 
     def get_queryset(self):

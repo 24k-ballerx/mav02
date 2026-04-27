@@ -57,7 +57,7 @@ const Notices = {
             });
             const initials = notice.author_details ? notice.author_details.initials : '??';
             const authorName = notice.author_details ? `${notice.author_details.first_name} ${notice.author_details.last_name}` : 'Unknown';
-            const role = notice.author_details ? notice.author_details.role_display : 'Staff';
+            const role = notice.author_details ? notice.author_details.role : 'Staff';
             
             let accentColor = 'var(--primary)';
             if (notice.category === 'urgent') accentColor = 'var(--danger)';
@@ -108,8 +108,8 @@ const Notices = {
         publishBtn.onclick = async () => {
             const panel = document.querySelector('.compose-panel');
             const title = panel.querySelector('input[type="text"]').value;
-            const category = panel.querySelector('select:nth-of-type(1)').value.toLowerCase();
-            const audience = panel.querySelector('select:nth-of-type(2)').value.toLowerCase().split(' ')[0]; // students, parents etc
+            const category = panel.querySelector('select:nth-of-type(1)').value;
+            const audience = panel.querySelector('select:nth-of-type(2)').value;
             const content = panel.querySelector('textarea').value;
 
             if (!title || !content) {

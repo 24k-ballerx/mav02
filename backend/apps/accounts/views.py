@@ -1,8 +1,8 @@
 """
 Authentication views for Maverick International School Portal.
-All endpoints are under /api/auth/
 """
 from django.contrib.auth import get_user_model
+from django.db.models import Count
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -17,6 +17,10 @@ from .serializers import (
     ResetPasswordSerializer,
     UserProfileSerializer,
 )
+
+from apps.courses.models import Course
+from apps.results.models import Result
+from apps.notices.models import Notice
 
 User = get_user_model()
 
@@ -170,3 +174,21 @@ class ResetPasswordView(APIView):
                 status=status.HTTP_200_OK
             )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class DashboardStatsView(APIView):
+    """
+    GET /api/auth/stats/
+    Returns global stats for the dashboard cards.
+    """
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        stats = {
+            'total_students': User.objects.filter(role=User.Role.STUDENT).count(),
+            'total_teachers': User.objects.filter(role=User.Role.TEACHER).count(),
+            'total_courses': Course.objects.count(),
+            'total_notices': Notice.objects.count(),
+            'urgent_notices': Notice.objects.filter(is_urgent=True).count(),
+            'recent_results': Result.objects.count(), # Just a count for now
+        }
+        return Response(stats)
