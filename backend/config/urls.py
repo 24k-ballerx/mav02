@@ -19,8 +19,18 @@ urlpatterns = [
     path('api/notices/', include('apps.notices.urls')),
     path('api/timetable/', include('apps.timetable.urls')),
 
-    # Root
+    # Root & Index
     path('', TemplateView.as_view(template_name='index.html'), name='index'),
+    path('index.html', TemplateView.as_view(template_name='index.html')),
+
+    # Frontend Pages
+    path('dashboard.html', TemplateView.as_view(template_name='dashboard.html'), name='dashboard'),
+    path('students.html', TemplateView.as_view(template_name='students.html'), name='students'),
+    path('courses.html', TemplateView.as_view(template_name='courses.html'), name='courses'),
+    path('results.html', TemplateView.as_view(template_name='results.html'), name='results'),
+    path('timetable.html', TemplateView.as_view(template_name='timetable.html'), name='timetable'),
+    path('notices.html', TemplateView.as_view(template_name='notices.html'), name='notices'),
+    path('profile.html', TemplateView.as_view(template_name='profile.html'), name='profile'),
 ]
 
 # Serve media files in development
