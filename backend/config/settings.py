@@ -12,6 +12,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY', default='django-insecure-change-me-for-production')
 DEBUG = config('DEBUG', default=False, cast=bool)
 ALLOWED_HOSTS = ["*"]
+APPEND_SLASH = False
 print("ALLOWED_HOSTS ACTIVE:", ALLOWED_HOSTS)
 
 INSTALLED_APPS = [

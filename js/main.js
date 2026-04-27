@@ -23,7 +23,8 @@ const Portal = {
     this.setupToasts();
     
     // Auto-redirect if already logged in on index.html
-    const isLoginPage = window.location.pathname.endsWith('index.html') || window.location.pathname.endsWith('/');
+    const path = window.location.pathname.replace(/\/$/, '');
+    const isLoginPage = path === '' || path === '/index.html' || path === '/index';
     if (isLoginPage && this.getUser()) {
       console.log("User already logged in, redirecting to dashboard...");
       window.location.href = 'dashboard.html';
