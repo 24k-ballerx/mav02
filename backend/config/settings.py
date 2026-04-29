@@ -11,7 +11,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = config('SECRET_KEY', default='django-insecure-change-me-for-production')
 DEBUG = config('DEBUG', default=False, cast=bool)
-ALLOWED_HOSTS = ["mav02.onrender.com"]
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1,mav02.onrender.com').split(',')
 APPEND_SLASH = False
 print("ALLOWED_HOSTS ACTIVE:", ALLOWED_HOSTS)
 
